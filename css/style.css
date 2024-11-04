@@ -186,8 +186,8 @@ sup {
 }
 
 #ascii {
-  //position: absolute; top: 0; right: 0px; bottom: 0;  margin-right: 20px ; padding-right: 20px; overflow: auto;.
-  white-space:pre ;
+  position: absolute; top: 0; right: 0px; bottom: 0;  margin-right: 20px ; padding-right: 20px; overflow: auto;
+  white-space :pre;
   font-family: "Courier New", fixed, monospace;
 }
 
@@ -451,9 +451,31 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: normal
 }
 
+h4 {
+    display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
 q:before, q:after {
     content: ''
 }
+
+div.teaser-info {
+    margin-bottom: 9px;
+    font-size: 11px;
+}
+
+div.teaser-links a {
+    margin-right: 15px;
+    font-size: 11px;
+    float: left;
+}
+
 
 /* Global reset-RESET */
 /* The below restores some sensible defaults */
@@ -566,16 +588,6 @@ a:hover {
 }
 
 
-#lang-options {
-    width: 200px;
-    height: 30px;
-    background: #fff;
-    border-radius: 20px;
-    margin-top: 700px;
-    position: fixed;
-    padding-bottom: 0px;
-
-}
 #contentbox {
     margin-top: 100px;
     background: url(../assets/content/h2-underline.gif) no-repeat;
@@ -614,12 +626,41 @@ a:hover {
     font-size: 18px;
     margin-bottom: 20px;
     padding: 0 px 10px;
-    text-decoration: underline;
+    /* text-decoration: underline; */
     color: #000;
     font-weight: normal;
 
-    /* background: #fff url(../assets/content/h2-underline.gif) 0 bottom no-repeat; */
+    background: #fff url(../assets/content/h3-underline.gif) 0 bottom no-repeat;
     background-size: contain;
     line-height: 39px;
 }
 
+.imageright {
+    float: right;
+    margin: 0 0 10px 30px;
+}
+.floatleft {
+    float: left;
+}
+
+
+.columnRight,
+.columnLeft {
+    width: 260px;
+    float: left;
+}
+
+.columnLeft {
+    margin-right: 40px;
+}
+
+dl.definitionlist dt {
+    float: left;
+    font-weight: bold;
+}
+
+dl.definitionlist dd {
+    float: none;
+    padding-bottom: 5px;
+    margin-left: 100px;
+}

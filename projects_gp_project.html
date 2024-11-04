@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" /> 
+
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+        <title> Mohamed Seyam  </title>
+
+
+</head>
+
+<body>
+  <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">Seyam </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-item nav-link" href="index.html"><i class="fas fa-info-circle"></i> About</a>
+                <a class="nav-item nav-link" href="https://github.com/mohamed-seyam"><i class="fab fa-github"></i> Github</a>
+                
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="https://www.linkedin.com/in/mohamed-seyam-bb185a230/"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a class="nav-item nav-link" href="https://twitter.com/Mohamed56848980"><i class="fab fa-twitter"></i> Twitter</a>
+                <a class="nav-item nav-link" href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                <a class="nav-item nav-link" href="https://www.facebook.com/mohamedseyam99/"><i class="fab fa-facebook"></i> Facebook</a>
+              
+            </div>
+          </div>
+        </div>
+      </nav>
+  </header>
+
+    <div id="centerwrap"> 
+        
+        <!-- image div-->
+        <section id="imagebox">
+            <img id="profile-image" src="assets/imgs/profile_pic.jpg" alt="Profile picture">
+        </section>
+        <!-- end of image div-->
+
+        <!-- nav div-->
+        <nav id="navibox">
+            <ul class="menu">
+                <li><a href="/">🏠 home</a></li>
+                <li><a href="/contact/">📞 contact</a></li>
+                <li><a href="/research/">🔬 research</a></li>
+                <li><a href="/publications/">📚 publications</a></li>
+                <li><a href="/projects/">🏗️ projects</a></li>
+                <li><a href="/blog/">✍️ blog</a></li>
+                <li><a href="/links/">🔗 links</a></li>
+            </ul>
+
+        </nav>
+        <!-- end of nav div-->
+       
+        <!-- content div-->
+        <div id="contentbox" class = "clearfix">
+
+            <h2> Projects </h2>
+            <div id="content">
+              <h3 style="color: black;">Automatic Identification of Swallowing Kinematics in VFSS</h3>
+              <p>
+                  <iframe width="560" height="315" src="https://drive.google.com/file/d/1EDuMDzW2sWOaQDv8Tcr6CwX4IkQ3Fjho/preview" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+              </p>
+              
+              <a href="#">
+                  <img class="imageright" title="Interactive Shape Modeling" src="assets/content/swallowing.jpg" alt="Interactive Shape Modeling">
+              </a>
+              <p>
+                  <h3>Problem Summary</h3>
+                  Swallowing is a coordinated neuromuscular process essential for human survival, 
+                  transferring food from the oral cavity to the stomach. 
+                  It requires precise coordination among various anatomical structures in the head and neck, 
+                  many of which are involved in both swallowing and respiration. <br>
+                  
+                  <p style="margin-top: 10px;">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/VoSMA2Anq3U" title="Dysphagia, Animation." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                  </p>
+
+                  Any dysfunction can redirect food into the airway,
+                  leading to dysphagia, which may cause severe complications such as malnutrition, dehydration, and aspiration pneumonia.
+          
+                  Videofluoroscopic swallowing study (VFSS) is the gold standard for diagnosing dysphagia, where clinicians review x-ray video frames to assess the swallowing process, including bolus motion, airway protection, and hyoid bone movement. This frame-by-frame analysis is subjective, time-consuming, and requires skilled clinicians, as identifying small anatomical structures can be challenging.
+                  <p style="margin-top: 10px;">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Q36T5DGHfTw" title="Dysphagia, Animation." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                  </p>
+                  
+
+                  <h3>Methodology</h3>
+                  First, we extract swallowing segments from VFSS videos using optical flow to estimate motion 
+                  between consecutive frames. This optical flow is input into a deep neural network (DNN) that 
+                  identifies frames with bolus motion. A subsequent DNN isolates frames specific to the pharyngeal phase.
+                  A third DNN automatically detects the hyoid bone location relative to C2 and C4 vertebrae, 
+                  given its importance in airway protection and swallowing integrity.
+                  Another DNN segments the bolus to detect potential airway invasion. 
+                  A graphical user interface integrates all these components, 
+                  processing an x-ray video with multiple swallows and producing a 
+                  report comparing results with normal/patient cohorts.
+                  <a href="#">
+                    <img width="560" height="315" title="Interactive Shape Modeling" src="assets/content/pipeline.png" alt="Interactive Shape Modeling">
+                  </a>
+                  
+          
+                  <h3>Skills Gained</h3>
+                  Optical Flow (TVL1, FlowNet2.0).<br>
+                  Deep Learning Frameworks (TensorFlow, PyTorch).<br>
+                  Deep Learning Architectures (U-Net, SSD, VGG16, Shallow Networks).<br>
+                  GPU Acceleration (CUDA), Multi-Processing, Multi-Threading.<br>
+                  Graphical User Interface (PyQt5).
+          
+                  <h3>Discussion and Conclusion</h3>
+                  This pipeline supports diagnostic decisions by reducing initial examination time by over 50%. The pharyngeal model works only on dynamic frames, optimizing the overall inference time. The system localizes C3 and C4 vertebral scalars along with the hyoid bone with a mean average precision above 71% at IoU=0.5, aiding the evaluation of hyoid displacement. The segmentation model achieves a 78% Jaccard Index, providing an objective means to track bolus flow or residue during VFSS.
+              </p>
+              <h3>Future Work Suggestion</h3>
+              Developing a model to automatically detect bolus residue and airway invasion (food in the larynx).<br>
+              Detecting pharyngeal phase using a dynamic region of interest (ROI) from the C2-C4 segment.
+
+              <h3>References</h3>
+              <small>
+                Clavé, P., & Shaker, R. (2015). Dysphagia: current reality and scope of the problem. Nature Reviews Gastroenterology & Hepatology, 12(5), 259–270.<br>
+                Palmer, J. B., Kuhlemeier, K. V., Tippett, D. C., & Lynch, C. (1993). A protocol for the videofluorographic swallowing study. Dysphagia, 8(3), 209–214.<br>
+                McCullough, G. H., Wertz, R. T., Rosenbek, J. C., Mills, R. H., Webb, W. G., & Ross, K. B. (2001). Inter- and intrajudge reliability for videofluoroscopic swallowing evaluation measures. Dysphagia, 16(2), 110–118.<br>
+                Zhang, Z., Coyle, J. L., & Sejdić, E. (2018). Automatic hyoid bone detection in fluoroscopic images using deep learning. Scientific Reports, 8(1), 12310.
+              </small>
+              <h3>Group Picture</h3>
+              <a href="#">
+                <img width="560" height="315" title="Interactive Shape Modeling" src="assets/content/group_picture.jpg" alt="Interactive Shape Modeling">
+              </a>
+          </div>
+          
+          
+    </div><!-- End of div#centerwrap-->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+</body>
+
+</html>
