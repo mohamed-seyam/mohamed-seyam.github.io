@@ -668,7 +668,10 @@ dl.definitionlist dd {
 }
 
 
-@media (max-width: 990px) {
+
+
+
+/* @media (max-width: 990px) {
 
     #centerwrap {
         max-width: 100%;
@@ -739,7 +742,7 @@ dl.definitionlist dd {
     border: 1px solid #333;
     background: #fff;
     padding: 5px 10px;
-}
+} */
 
 /*
 .menu li:before {
@@ -752,7 +755,7 @@ dl.definitionlist dd {
     }
     */
 
-@media (max-width: 760px) {
+/* @media (max-width: 760px) {
 
     .yearSelectLabel {
         display: block;
@@ -1138,4 +1141,4 @@ dl.definitionlist dd {
     .fixed-hidden {
         margin-top: -60px;
     }
-}
+} */
