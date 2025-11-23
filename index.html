@@ -1,116 +1,975 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Seyam - AI Engineer Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        :root {
+            --primary-color: #7c3aed;
+            --secondary-color: #5b21b6;
+            --accent-color: #a78bfa;
+            --light-accent: #c4b5fd;
+            --dark-bg: #0a0118;
+            --card-bg: #1a0f2e;
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d1b4e;
+            --hover-bg: #f0f4f8;
+        }
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" /> 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0f0a1f 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-        <link rel="stylesheet" type="text/css" href="./css/style.css">
-        <title> Mohamed Seyam  </title>
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(91, 33, 182, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(10, 1, 24, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+            box-shadow: 0 4px 6px rgba(124, 58, 237, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .contact-item svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--accent-color);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: white;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.5),
+                        0 0 30px rgba(167, 139, 250, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Section Styles */
+        section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.3);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        /* Experience Section */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-color), var(--border-color));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--dark-bg);
+            box-shadow: 0 0 0 3px var(--border-color);
+        }
+
+        .experience-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+        }
+
+        .experience-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.25);
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.15);
+            transform: translateX(5px);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .experience-title {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .company {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .experience-description {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .experience-description li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .experience-description li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .keyword {
+            background: rgba(124, 58, 237, 0.15);
+            color: var(--accent-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .keyword:hover {
+            background: rgba(124, 58, 237, 0.25);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(167, 139, 250, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3),
+                        0 0 40px rgba(167, 139, 250, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .project-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-category h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill-tag {
+            background: rgba(74, 144, 226, 0.08);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(74, 144, 226, 0.15);
+            color: var(--primary-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* Education Section */
+        .education-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .education-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .education-card p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+
+        .degree {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 6rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer p {
+            color: var(--text-muted);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-header {
+                flex-direction: column;
+            }
+
+            .publication-detailed {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Publications */
+        .publication-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .publication-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.15);
+        }
+
+        .publication-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .publication-detailed {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: start;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .publication-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .publication-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .publication-title-large {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .publication-year {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .publication-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
 
 
+    </style>
 </head>
-
 <body>
-  <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Seyam </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
-                <a class="nav-item nav-link" href="index.html"><i class="fas fa-info-circle"></i> About</a>
-                <a class="nav-item nav-link" href="https://github.com/mohamed-seyam"><i class="fab fa-github"></i> Github</a>
-                
-            </div>
-            <!-- Navbar Right Side -->
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="https://www.linkedin.com/in/mohamed-seyam-bb185a230/"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                <a class="nav-item nav-link" href="https://twitter.com/Mohamed56848980"><i class="fab fa-twitter"></i> Twitter</a>
-                <a class="nav-item nav-link" href="#"><i class="fab fa-instagram"></i> Instagram</a>
-                <a class="nav-item nav-link" href="https://www.facebook.com/mohamedseyam99/"><i class="fab fa-facebook"></i> Facebook</a>
-              
-            </div>
-          </div>
-        </div>
-      </nav>
+    <header>
+        <nav>
+            <div class="logo">MS</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#blogs">Blogs</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#education">Education</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <div id="centerwrap"> 
+    <section class="hero" id="about">
+        <h1>Mohamed Seyam</h1>
+        <p class="subtitle">Artificial Intelligence Engineer</p>
+        <p>Specialized in Computer Vision, Deep Learning, and MLOps. Building intelligent systems for medical imaging, satellite analytics, and automated workflows. Passionate about pushing the boundaries of AI to solve real-world problems.</p>
         
-        <!-- image div-->
-        <section id="imagebox">
-            <img id="profile-image" src="assets/imgs/profile_pic.jpg" alt="Profile picture">
-        </section>
-        <!-- end of image div-->
+        <div class="contact-info">
+            <div class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span><a href="mailto:mohamedseyam099@gmail.com">mohamedseyam099@gmail.com</a></span>
+            </div>
+            <div class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                <span>(+20) 01090982078</span>
+            </div>
+            <div class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Cairo, Egypt</span>
+            </div>
+        </div>
 
-        <!-- nav div-->
-        <nav id="navibox">
-            <ul class="menu">
-                <li><a href="/">🏠 home</a></li>
-                <li><a href="#">📞 contact</a></li>
-                <li><a href="#">🔬 research</a></li>
-                <li><a href="/publications.html">📚 publications</a></li>
-                <li><a href="/projects.html">🏗️ projects</a></li>
-                <li><a href="/blogs.html">✍️ blog</a></li>
-                <li><a href="#">🔗 links</a></li>
-            </ul>
+        <div class="cta-buttons">
+           <a href="https://www.linkedin.com/in/mohamed-seyam-bb185a230/" class="btn btn-primary" target="_blank">LinkedIn Profile</a>
+            <a href="https://github.com/mohamed-seyam" class="btn btn-secondary" target="_blank">GitHub Portfolio</a>
+        </div>
+    </section>
 
-        </nav>
-        <!-- end of nav div-->
-       
-        <!-- content div-->
-        <article id="contentbox">
+    <section id="experience">
+        <h2 class="section-title">Professional Experience</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="experience-title">Artificial Intelligence Engineer</h3>
+                            <p class="company">Wakeb Data · Cairo, Egypt</p>
+                        </div>
+                        <span class="date">Jan 2025 - Present</span>
+                    </div>
+                    <ul class="experience-description">
+                        <li>Developed end-to-end AI systems for computer vision and geospatial analytics, including satellite image segmentation, object detection, and change detection</li>
+                        <li>Led the annotation team, gathering project requirements, delegating tasks, and reviewing work for accuracy and consistency</li>
+                        <li>Fine-tuned open-source Vision-Language Models and foundational models for land cover mapping and environmental monitoring tasks</li>
+                        <li>Optimized deep learning models for deployment on edge devices such as NVIDIA Jetson, and containerized workflows using Docker</li>
+                        <li>Collaborated with GIS and web teams to integrate AI solutions into production pipelines</li>
+                        <li>Contributed to the development of an agentic RAG system for Robotic Process Automation (RPA) workflows</li>
+                        <li>Played a key role in developing an agentic RAG solution for automated presentation generation</li>
+                    </ul>
+                    <div class="keywords">
+                        <span class="keyword">TensorFlow</span>
+                        <span class="keyword">PyTorch</span>
+                        <span class="keyword">Docker</span>
+                        <span class="keyword">NVIDIA Jetson</span>
+                        <span class="keyword">Open Vocabulary</span>
+                        <span class="keyword">MLflow</span>
+                        <span class="keyword">Qdrant</span>
+                        <span class="keyword">pgvector</span>
+                        <span class="keyword">GitHub Actions</span>
+                        <span class="keyword">Nginx</span>
+                        <span class="keyword">Ollama</span>
+                    </div>
+                </div>
+            </div>
 
-            <h2>welcome</h2>
-            <div id="content">
-              <p>I'm Mohamed Seyam! 👋<br>
-                I'm an AI Engineer specializing in Computer Vision and Medical Imaging with expertise 
-                in advanced AI techniques for healthcare. <br>
-                Currently, I’m working at Medsoft on cutting-edge solutions in CranioMaxilloFacial Surgery, focusing on advanced segmentation, mesh processing, and CT image analysis.</p>
-                <br>
-                <h3>🔧 Technical Skills & Expertise</h3>
-                <ul>
-                    <li><strong> <i>Deep Learning & AI </i> </strong>: Proficient in TensorFlow, PyTorch, and AWS SageMaker for building complex 3D segmentation models and automated machine learning pipelines.</li>
-                    <li><strong> <i>Computer Vision</strong>:</i> Expertise in 2D and 3D image processing, statistical shape modeling, action recognition, and object tracking to enhance surgical planning and analysis./li>
-                    <li><strong> <i>Generative AI & Reconstruction</strong></i>: Leveraging generative models and autoencoders for trauma reconstruction and synthetic data generation.</li>
-                    <li><strong> <i>Medical Imaging</strong></i>: Skilled in CT and MRI processing, mesh segmentation, and soft-tissue simulation to support CranioMaxilloFacial applications.</li>
-                    <li><strong> <i>Computational Geometry</strong></i>: Applying techniques in mesh processing, computational geometry, and statistical shape modeling to create precise, clinically relevant solutions.</li>
-                </ul>
-                <br>
-                <h3>🚀 Current Projects</h3>
-                <ul>
-                    <li>Developing 3D segmentation pipelines for anatomical region analysis.</li>
-                    <li>Implementing innovative 3D landmarking using 2D U-Net and computer graphics integration.</li>
-                    <li>Collaborating with global R&D teams, including DePuy Synthes at Johnson & Johnson, to deliver AI-driven solutions for medical applications.</li>
-                </ul>
-                
-                <h3>🌱 My Background</h3>
-                <ul>
-                    <li><strong>Education</strong>: Bachelor's in Systems and Biomedical Engineering from Cairo University, graduating in the top 10 of my class.</li>
-                    <li><strong>Research</strong>: Conducted deep learning research on automated identification of swallowing kinematics, partnering with international institutions.</li>
-                </ul>
-         
-        </div> <!-- End of div#contentbox-->
+            <div class="timeline-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="experience-title">Artificial Intelligence Engineer</h3>
+                            <p class="company">Medsoft · Remote</p>
+                        </div>
+                        <span class="date">Jan 2023 - Jan 2025</span>
+                    </div>
+                    <ul class="experience-description">
+                        <li>Built advanced 3D segmentation models in TensorFlow to enhance accuracy in medical imaging</li>
+                        <li>Utilized AWS SageMaker with S3 storage to train and test large-scale 3D models effectively</li>
+                        <li>Applied Statistical Shape Modeling combined with deep autoencoders for generative reconstruction and synthetic data creation</li>
+                        <li>Implemented an innovative 3D landmarking approach using a 2D U-Net model, integrating computer graphics with deep learning</li>
+                        <li>Collaborated closely with international teams, including the DePuy Synthes R&D team at Johnson & Johnson</li>
+                    </ul>
+                    <div class="keywords">
+                        <span class="keyword">TensorFlow</span>
+                        <span class="keyword">PyTorch</span>
+                        <span class="keyword">AWS SageMaker</span>
+                        <span class="keyword">S3</span>
+                        <span class="keyword">U-Net</span>
+                        <span class="keyword">GANs</span>
+                        <span class="keyword">Autoencoder</span>
+                        <span class="keyword">3D Segmentation</span>
+                    </div>
+                </div>
+            </div>
 
-    </div><!-- End of div#centerwrap-->
+            <div class="timeline-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="experience-title">Computer Vision Engineer</h3>
+                            <p class="company">DevisionX · Remote</p>
+                        </div>
+                        <span class="date">Nov 2022 - Jan 2023</span>
+                    </div>
+                    <ul class="experience-description">
+                        <li>Developed an automated machine learning pipeline for image classification, object detection, and segmentation using TensorFlow AutoML</li>
+                        <li>Streamlined model training and deployment processes</li>
+                    </ul>
+                    <div class="keywords">
+                        <span class="keyword">AutoML</span>
+                        <span class="keyword">Keras-tuner</span>
+                        <span class="keyword">YOLO</span>
+                        <span class="keyword">TensorFlow</span>
+                        <span class="keyword">PyTorch</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <section id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3 class="project-title">Automatic Identification of Swallowing Kinematics in VFSS</h3>
+                <a href="projects/swallowing-kinematics.html" class="project-link">View Project →</a>
+                <p class="project-description">
+                    A deep learning toolkit designed to identify swallowing kinematics automatically in Videofluoroscopic Swallowing Study (VFSS). Incorporates advanced techniques including optical flow, action recognition, object tracking, and image segmentation to develop a computer-aided system that assists doctors in diagnosing dysphagia.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">Medical Imaging</span>
+                    <span class="keyword">Deep Learning</span>
+                    <span class="keyword">U-Net</span>
+                    <span class="keyword">SSD</span>
+                    <span class="keyword">Optical Flow</span>
+                    <span class="keyword">PyTorch</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">Needle - Deep Learning Framework</h3>
+                <a href="#" class="project-link">View Project →</a>
+                <p class="project-description">
+                    A deep learning framework developed from scratch, built on the concept of automatic differentiation similar to PyTorch. Implemented using Python and C++ and serves as a foundational building block for constructing complex neural networks.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">Automatic Differentiation</span>
+                    <span class="keyword">Tensor</span>
+                    <span class="keyword">Python</span>
+                    <span class="keyword">C++</span>
+                    <span class="keyword">OOP</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">mini-RAG</h3>
+                <a href="#" class="project-link">View Project →</a>
+                <p class="project-description">
+                    Developed a production-ready Retrieval-Augmented Generation (RAG) application as an educational project. Utilized Python with FastAPI framework and integrated with various databases. Deployed using Docker and Docker Compose with monitoring via Prometheus and Grafana.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">Docker</span>
+                    <span class="keyword">FastAPI</span>
+                    <span class="keyword">PostgreSQL</span>
+                    <span class="keyword">pgvector</span>
+                    <span class="keyword">MongoDB</span>
+                    <span class="keyword">Prometheus</span>
+                    <span class="keyword">Grafana</span>
+                    <span class="keyword">Nginx</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title">Skills & Technologies</h2>
+        <div class="skills-container">
+            <div class="skill-category">
+                <h3>Programming Languages</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">C++</span>
+                    <span class="skill-tag">Scala</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>ML/DL & MLOps</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">TensorFlow</span>
+                    <span class="skill-tag">PyTorch</span>
+                    <span class="skill-tag">Hugging Face</span>
+                    <span class="skill-tag">Transformers</span>
+                    <span class="skill-tag">GANs</span>
+                    <span class="skill-tag">VAEs</span>
+                    <span class="skill-tag">Vision-Language Models</span>
+                    <span class="skill-tag">Statistical Shape Modeling</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>Computer Vision</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">Satellite Image Segmentation</span>
+                    <span class="skill-tag">Object Detection</span>
+                    <span class="skill-tag">Change Detection</span>
+                    <span class="skill-tag">Action Recognition</span>
+                    <span class="skill-tag">Object Tracking</span>
+                    <span class="skill-tag">Image Segmentation</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>DevOps & Build Systems</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">Docker Compose</span>
+                    <span class="skill-tag">Prometheus</span>
+                    <span class="skill-tag">Grafana</span>
+                    <span class="skill-tag">Nginx</span>
+                    <span class="skill-tag">GitHub Actions</span>
+                    <span class="skill-tag">Alembic</span>
+                    <span class="skill-tag">Make</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>Cloud Computing</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">AWS S3</span>
+                    <span class="skill-tag">AWS SageMaker</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>Databases & Web Development</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">pgvector</span>
+                    <span class="skill-tag">Qdrant</span>
+                    <span class="skill-tag">Flask</span>
+                    <span class="skill-tag">FastAPI</span>
+                    <span class="skill-tag">RESTful API</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>Computer Graphics</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">Libigl</span>
+                    <span class="skill-tag">Scalismo</span>
+                    <span class="skill-tag">VTK</span>
+                    <span class="skill-tag">CGAL</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3>Other Tools</h3>
+                <div class="skill-list">
+                    <span class="skill-tag">NVIDIA Jetson</span>
+                    <span class="skill-tag">Ollama</span>
+                    <span class="skill-tag">LaTeX</span>
+                    <span class="skill-tag">Jupyter</span>
+                    <span class="skill-tag">VSCode</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blogs">
+        <h2 class="section-title">Blog Posts</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3 class="project-title">احدث نماذج نفيديا</h3>
+                <a href="blogs/nvidia-llama-arabic.html" class="project-link">Read Article →</a>
+                <p class="project-description">
+                    NVIDIA, the company you might associate more with graphics and gaming, has just made a bold move into the world of artificial intelligence with the release of its Llama 3.1-70B Instruct model. This model is open-source, incredibly powerful, and directly competing with industry heavyweights like GPT-4.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">NVIDIA</span>
+                    <span class="keyword">Llama 3.1</span>
+                    <span class="keyword">Open Source AI</span>
+                    <span class="keyword">LLM</span>
+                    <span class="keyword">Arabic</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">هل الذكاء الاصطناعي بيفكر ولا بيحفظ ؟</h3>
+                <a href="blogs/apple-ai-reasoning-arabic.html" class="project-link">Read Article →</a>
+                <p class="project-description">
+                    Is AI Really Thinking? Apple's Research Exposes Alarming Flaws in AI Decision-Making. Apple's new research reveals that AI systems, even the most advanced, might not be truly thinking at all. Instead, they could be dangerously vulnerable to small, seemingly insignificant changes.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">Apple Research</span>
+                    <span class="keyword">AI Reasoning</span>
+                    <span class="keyword">GSM-Symbolic</span>
+                    <span class="keyword">Pattern Matching</span>
+                    <span class="keyword">Arabic</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications">
+        <h2 class="section-title">Publications</h2>
+        <div class="publication-detailed">
+            <div class="publication-image">
+                <img src="assets/images/publicatoin2022_1.jpg" alt="AI-Powered Toolkit for Automated Swallowing Kinematic Analysis">
+            </div>
+            <div class="publication-content">
+                <h3 class="publication-title-large">AI-Powered Toolkit for Automated Swallowing Kinematic Analysis in X-Ray Videofluoroscopy</h3>
+                <p class="publication-year">2022</p>
+                <p class="publication-description">
+                    Developed an AI-powered toolkit for automated identification of swallowing kinematics in Videofluoroscopic Swallowing Study (VFSS). The system uses advanced deep learning techniques including optical flow, action recognition, object tracking, and image segmentation to assist doctors in diagnosing dysphagia. The pipeline reduces initial examination time by over 50% and provides objective measurements for hyoid bone displacement and bolus tracking.
+                </p>
+                <div class="keywords">
+                    <span class="keyword">Medical Imaging</span>
+                    <span class="keyword">Deep Learning</span>
+                    <span class="keyword">Computer Vision</span>
+                    <span class="keyword">Healthcare AI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <h2 class="section-title">Education</h2>
+        <div class="education-card">
+            <h3>Cairo University</h3>
+            <p>Faculty of Engineering</p>
+            <p class="degree">Bachelor's in Biomedical Engineering</p>
+            <p class="date">2017 - 2022</p>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2024 Mohamed Seyam. All rights reserved.</p>
+    </footer>
+    
 </body>
-
 </html>
