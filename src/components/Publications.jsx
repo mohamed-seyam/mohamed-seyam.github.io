@@ -1,12 +1,14 @@
 import Section from './Section'
 import Tags from './Tags'
-import { publications } from '../data/portfolio'
+import { useLang } from '../i18n'
 
 export default function Publications() {
+  const { t } = useLang()
+
   return (
-    <Section id="publications" kicker="03" title="Publications">
-      {publications.map((pub) => (
-        <article className="pub-row reveal" key={pub.title}>
+    <Section id="publications" kicker="03" title={t.ui.sections.publications}>
+      {t.publications.map((pub, i) => (
+        <article className="pub-row reveal" key={i}>
           <img src={pub.image} alt={pub.title} />
           <div>
             <h3>{pub.title}</h3>

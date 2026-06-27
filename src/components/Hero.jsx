@@ -1,16 +1,19 @@
-import { profile, stats } from '../data/portfolio'
+import { useLang } from '../i18n'
 import { MailIcon, PhoneIcon, PinIcon, GithubIcon, LinkedinIcon } from './icons'
 
 export default function Hero() {
+  const { t } = useLang()
+  const { profile, stats, ui } = t
+
   return (
     <section className="hero" id="about">
       <div className="container hero-grid">
         <div className="reveal">
           <span className="hero-eyebrow">
-            <span className="dot" /> Available for new opportunities
+            <span className="dot" /> {ui.available}
           </span>
           <h1>
-            Hi, I'm <span className="accent">{profile.name}</span>
+            {ui.greeting} <span className="accent">{profile.name}</span>
           </h1>
           <p className="subtitle">{profile.title}</p>
           <p className="lead">{profile.summary}</p>
@@ -40,7 +43,7 @@ export default function Hero() {
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                 <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z" />
               </svg>
-              Resume
+              {ui.resume}
             </a>
             <a
               href={profile.links.linkedin}

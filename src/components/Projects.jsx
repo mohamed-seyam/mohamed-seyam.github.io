@@ -1,14 +1,15 @@
 import Section from './Section'
 import Tags from './Tags'
-import { projects } from '../data/portfolio'
+import { useLang } from '../i18n'
 
 export default function Projects() {
+  const { t } = useLang()
+
   return (
-    <Section id="projects" kicker="02" title="Projects">
+    <Section id="projects" kicker="02" title={t.ui.sections.projects}>
       <div className="row-list">
-        {projects.map((project, i) => (
-          <article className="proj-row reveal" key={project.title}>
-            <span className="proj-index">{String(i + 1).padStart(2, '0')}</span>
+        {t.projects.map((project, i) => (
+          <article className="proj-row reveal" key={i}>
             <div className="proj-body">
               <h3 className="project-title">{project.title}</h3>
               <p className="project-desc">{project.description}</p>
@@ -20,7 +21,7 @@ export default function Projects() {
               target={project.link.startsWith('http') ? '_blank' : undefined}
               rel="noreferrer"
             >
-              View →
+              {t.ui.viewProject}
             </a>
           </article>
         ))}

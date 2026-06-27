@@ -5,11 +5,8 @@ import Projects from './components/Projects'
 import Publications from './components/Publications'
 import Education from './components/Education'
 import Footer from './components/Footer'
-import { useReveal } from './hooks/useReveal'
 
 export default function App() {
-  useReveal()
-
   return (
     <>
       <div className="bg-decor" aria-hidden="true" />

@@ -96,6 +96,20 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--brand); }
+.nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+.lang-toggle {
+  background: #fff;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  transition: color 0.2s, border-color 0.2s;
+}
+.lang-toggle:hover { color: var(--brand); border-color: var(--brand); }
 .nav-toggle {
   display: none;
   background: none;
@@ -207,6 +221,11 @@ a { color: inherit; text-decoration: none; }
 
 /* Hero portrait */
 .hero-photo-wrap { display: flex; justify-content: center; }
+.hero-photo-wrap > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .hero-photo {
   position: relative;
   width: min(300px, 80%);
@@ -276,7 +295,7 @@ a { color: inherit; text-decoration: none; }
 .kw li { display: inline-flex; align-items: center; }
 .kw li::before {
   content: '·';
-  margin-right: 0.85rem;
+  margin-inline-end: 0.85rem;
   color: var(--brand);
   font-weight: 700;
 }
@@ -341,24 +360,20 @@ a { color: inherit; text-decoration: none; }
 .experience-title { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
 .company { color: var(--brand-dark); font-weight: 600; font-size: 0.92rem; margin-top: 0.15rem; }
 .bullet-list { list-style: none; display: grid; gap: 0.6rem; margin-top: 0; }
-.bullet-list li { position: relative; padding-left: 1.4rem; color: var(--text-muted); font-size: 0.95rem; }
-.bullet-list li::before { content: '▹'; position: absolute; left: 0; color: var(--brand); }
+.bullet-list li { position: relative; padding-inline-start: 1.4rem; color: var(--text-muted); font-size: 0.95rem; }
+.bullet-list li::before { content: '▹'; position: absolute; inset-inline-start: 0; color: var(--brand); }
+[dir="rtl"] .bullet-list li::before { content: '◃'; }
 
 /* ===== Projects (rows) ===== */
 .proj-row {
   display: grid;
-  grid-template-columns: 64px 1fr auto;
+  grid-template-columns: 1fr auto;
   gap: 0 2rem;
   padding: 2rem 0;
   border-bottom: 1px solid var(--border);
   align-items: baseline;
 }
 .proj-row:last-child { border-bottom: none; }
-.proj-index {
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  color: var(--text-faint);
-}
 .project-title {
   font-size: 1.2rem;
   font-weight: 700;
@@ -429,12 +444,14 @@ a { color: inherit; text-decoration: none; }
 .footer-socials a:hover { color: var(--brand); border-color: #ddd6fe; transform: translateY(-2px); }
 .footer-socials svg { width: 18px; height: 18px; fill: currentColor; }
 
-/* ===== Reveal on scroll =====
-   Only hide when JS has taken over (html.js-reveal); otherwise always visible. */
-.js-reveal .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.js-reveal .reveal.in { opacity: 1; transform: none; }
+/* Sections animate in once on first load (CSS-only, no JS — always ends visible). */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.reveal { animation: fadeUp 0.5s ease both; }
 @media (prefers-reduced-motion: reduce) {
-  .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal { animation: none; }
 }
 
 /* ===== Responsive ===== */
@@ -444,6 +461,7 @@ a { color: inherit; text-decoration: none; }
   .contact-info, .cta-buttons { justify-content: center; }
   .hero-photo-wrap { order: -1; }
   .pub-row { grid-template-columns: 1fr; gap: 1.5rem; }
+  .pub-row img { max-width: 300px; justify-self: center; }
 }
 
 @media (max-width: 640px) {
@@ -461,7 +479,25 @@ a { color: inherit; text-decoration: none; }
 
   .exp-head { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
   .proj-row { grid-template-columns: 1fr; gap: 0.4rem; }
-  .proj-index { display: none; }
   .proj-row .project-link { margin-top: 0.4rem; }
   .edu-row { grid-template-columns: 1fr; gap: 0.3rem; }
 }
+
+/* ===== Arabic / RTL ===== */
+[dir="rtl"] {
+  --font-sans: 'Tajawal', 'Inter', sans-serif;
+  --font-display: 'Tajawal', 'Space Grotesk', sans-serif;
+}
+/* Keep Latin technical terms readable in a clean sans even in RTL. */
+[dir="rtl"] .kw,
+[dir="rtl"] .exp-date,
+[dir="rtl"] .section-kicker,
+[dir="rtl"] .pub-year,
+[dir="rtl"] .edu-date,
+[dir="rtl"] .project-link {
+  font-family: 'Tajawal', var(--font-mono);
+}
+/* Project link arrow nudges toward the reading direction. */
+[dir="rtl"] .proj-row:hover .project-link { transform: translateX(-3px); }
+[dir="ltr"] .proj-row:hover .project-link { transform: translateX(3px); }
+.proj-row:hover .project-link { transform: none; }

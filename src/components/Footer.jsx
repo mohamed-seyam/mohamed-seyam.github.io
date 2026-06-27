@@ -1,8 +1,11 @@
-import { profile } from '../data/portfolio'
+import { useLang } from '../i18n'
 import { GithubIcon, LinkedinIcon, MailIcon } from './icons'
 
 export default function Footer() {
+  const { t } = useLang()
+  const { profile } = t
   const year = new Date().getFullYear()
+
   return (
     <footer className="footer">
       <div className="container footer-inner">

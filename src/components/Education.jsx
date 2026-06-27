@@ -1,11 +1,13 @@
 import Section from './Section'
-import { education } from '../data/portfolio'
+import { useLang } from '../i18n'
 
 export default function Education() {
+  const { t } = useLang()
+
   return (
-    <Section id="education" kicker="04" title="Education">
-      {education.map((edu) => (
-        <div className="edu-row reveal" key={edu.school}>
+    <Section id="education" kicker="04" title={t.ui.sections.education}>
+      {t.education.map((edu, i) => (
+        <div className="edu-row reveal" key={i}>
           <span className="edu-date">{edu.date}</span>
           <div>
             <h3 className="edu-school">{edu.school}</h3>
