@@ -6,6 +6,12 @@ const en = {
     resume: 'Resume',
     viewProject: 'View →',
     langButton: 'العربية',
+    model3dCta: 'View interactive 3D',
+    model3dHint: 'drag to rotate · scroll to zoom',
+    model3dLoading: 'Loading 3D…',
+    allProjects: 'Interactive Projects',
+    projectsIntro: 'A growing collection of my work in AI, computer vision, and 3D.',
+    allCategory: 'All',
     sections: {
       experience: 'Experience',
       projects: 'Projects',
@@ -31,11 +37,11 @@ const en = {
   },
 
   navLinks: [
-    { label: 'About', href: '#about' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Publications', href: '#publications' },
-    { label: 'Education', href: '#education' },
+    { label: 'About', href: '/#about' },
+    { label: 'Experience', href: '/#experience' },
+    { label: 'Projects', href: '/#projects' },
+    { label: 'Publications', href: '/#publications' },
+    { label: 'Education', href: '/#education' },
   ],
 
   stats: [
@@ -92,27 +98,18 @@ const en = {
     },
   ],
 
+  // Each project may set categoryKey (stable id used by the filter) and
+  // category (the localized label shown on the filter button).
   projects: [
     {
-      title: 'mini-RAG',
-      link: 'https://github.com/mohamed-seyam',
-      description:
-        'A production-ready Retrieval-Augmented Generation (RAG) application implementing dense vector retrieval via pgvector and hybrid storage with MongoDB. Focused on chunking strategy, retrieval accuracy, and API scalability. Deployed with Docker Compose, monitored via Prometheus and Grafana, with Nginx as reverse proxy.',
-      keywords: ['RAG', 'pgvector', 'MongoDB', 'FastAPI', 'Docker'],
-    },
-    {
-      title: 'Needle — Necessary Elements for Deep Learning',
-      link: 'https://github.com/mohamed-seyam',
-      description:
-        'A deep learning framework built from scratch in Python and C++, based on automatic differentiation (PyTorch-style). Covers tensor ops, backprop, and neural network primitives — demonstrating systems-level understanding of ML internals.',
-      keywords: ['Automatic Differentiation', 'Python', 'C++'],
-    },
-    {
-      title: 'Kinematics Identification Using Deep Learning',
+      title: '3D Individual Teeth Segmentation',
+      categoryKey: 'medical',
+      category: 'Medical',
       link: '#',
       description:
-        'A deep learning toolkit for automated swallowing kinematic analysis in X-Ray videofluoroscopy. Combined action recognition, object tracking, and image segmentation (U-Net, SSD, VGG16) into a computer-aided clinical system. Published work.',
-      keywords: ['U-Net', 'SSD', 'Object Tracking', 'Image Segmentation'],
+        'Instance segmentation of individual teeth from 3D intraoral scan meshes. Each tooth is detected and labeled directly on the raw mesh, enabling per-tooth analysis for orthodontic and dental workflows. Rotate and zoom a real lower-jaw scan below.',
+      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
+      model: '/assets/models/teeth-lower.obj',
     },
   ],
 

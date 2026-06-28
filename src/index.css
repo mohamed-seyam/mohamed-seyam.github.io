@@ -96,6 +96,42 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--brand); }
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  padding: 0.45rem 0.9rem;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: 1px solid #ddd6fe;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--brand); color: #fff; transform: translateY(-1px); }
+.page-intro { color: var(--text-muted); margin-bottom: 1.5rem; max-width: 60ch; }
+
+/* Project category filter */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.25rem; }
+.filter-chip {
+  padding: 0.45rem 1.05rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-strong);
+  background: #fff;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-chip:hover { border-color: var(--brand); color: var(--brand); }
+.filter-chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
 .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
 .lang-toggle {
   background: #fff;
@@ -391,6 +427,49 @@ a { color: inherit; text-decoration: none; }
   display: inline-block;
 }
 .proj-row:hover .project-link { transform: translateX(3px); }
+
+/* ===== 3D model embed ===== */
+.model-embed {
+  margin-top: 1.25rem;
+  height: 360px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #f4f4f7;
+  overflow: hidden;
+  position: relative;
+}
+.model-embed canvas { display: block; touch-action: none; cursor: grab; }
+.model-embed canvas:active { cursor: grabbing; }
+.model-cta {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  background:
+    radial-gradient(420px circle at 50% 40%, rgba(124, 58, 237, 0.06), transparent 70%),
+    #f4f4f7;
+  transition: color 0.2s, background 0.2s;
+}
+.model-cta:hover { color: var(--brand); }
+.model-cta svg { color: var(--brand); }
+.model-cta span { font-weight: 600; font-size: 0.98rem; }
+.model-cta small { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-faint); }
+.model-placeholder,
+.model-loading {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
 
 /* ===== Publications ===== */
 .pub-row {

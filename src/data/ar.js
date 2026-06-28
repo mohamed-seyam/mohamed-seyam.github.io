@@ -7,6 +7,12 @@ const ar = {
     resume: 'السيرة الذاتية',
     viewProject: 'عرض ←',
     langButton: 'English',
+    model3dCta: 'استعرض المجسم ثلاثي الأبعاد',
+    model3dHint: 'اسحب للتدوير · مرّر للتكبير',
+    model3dLoading: 'جارٍ تحميل المجسم…',
+    allProjects: 'المشاريع التفاعلية',
+    projectsIntro: 'مجموعة متنامية من أعمالي في الذكاء الاصطناعي والرؤية الحاسوبية والـ 3D.',
+    allCategory: 'الكل',
     sections: {
       experience: 'الخبرة العملية',
       projects: 'المشاريع',
@@ -32,11 +38,11 @@ const ar = {
   },
 
   navLinks: [
-    { label: 'نبذة', href: '#about' },
-    { label: 'الخبرة', href: '#experience' },
-    { label: 'المشاريع', href: '#projects' },
-    { label: 'المنشورات', href: '#publications' },
-    { label: 'التعليم', href: '#education' },
+    { label: 'نبذة', href: '/#about' },
+    { label: 'الخبرة', href: '/#experience' },
+    { label: 'المشاريع', href: '/#projects' },
+    { label: 'المنشورات', href: '/#publications' },
+    { label: 'التعليم', href: '/#education' },
   ],
 
   stats: [
@@ -95,25 +101,14 @@ const ar = {
 
   projects: [
     {
-      title: 'mini-RAG',
-      link: 'https://github.com/mohamed-seyam',
-      description:
-        'تطبيق RAG جاهز للإنتاج يعتمد dense vector retrieval عبر pgvector وhybrid storage مع MongoDB. يركّز على chunking strategy وretrieval accuracy وAPI scalability. منشور عبر Docker Compose مع monitoring بواسطة Prometheus وGrafana، وNginx كـ reverse proxy.',
-      keywords: ['RAG', 'pgvector', 'MongoDB', 'FastAPI', 'Docker'],
-    },
-    {
-      title: 'Needle — Necessary Elements for Deep Learning',
-      link: 'https://github.com/mohamed-seyam',
-      description:
-        'إطار deep learning مبني من الصفر بلغتَي Python وC++، يعتمد على automatic differentiation (بأسلوب PyTorch). يغطّي tensor ops وbackprop والمكوّنات الأساسية للـ neural networks، ويعكس فهمًا عميقًا لـ ML internals.',
-      keywords: ['Automatic Differentiation', 'Python', 'C++'],
-    },
-    {
-      title: 'Kinematics Identification Using Deep Learning',
+      title: '3D Individual Teeth Segmentation',
+      categoryKey: 'medical',
+      category: 'طبي',
       link: '#',
       description:
-        'مجموعة أدوات deep learning لتحليل swallowing kinematics آليًا في X-Ray videofluoroscopy. تجمع بين action recognition وobject tracking وimage segmentation (U-Net وSSD وVGG16) في نظام سريري مساعد. عمل منشور.',
-      keywords: ['U-Net', 'SSD', 'Object Tracking', 'Image Segmentation'],
+        'تجزئة instance لكل سنّة على حدة من مجسمات المسح الفموي ثلاثي الأبعاد (intraoral scans). يتم اكتشاف كل سنّة وتمييزها مباشرةً على الـ mesh الخام، مما يتيح تحليلًا لكل سنّة في تطبيقات تقويم الأسنان. يمكنك تدوير وتكبير مسح حقيقي للفك السفلي بالأسفل.',
+      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
+      model: '/assets/models/teeth-lower.obj',
     },
   ],
 
