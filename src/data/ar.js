@@ -110,6 +110,16 @@ const ar = {
       keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
       model: '/assets/models/teeth-lower.obj',
     },
+    {
+      title: 'ppgen — AI Presentation Generator',
+      categoryKey: 'llm',
+      category: 'نماذج لغوية ووكلاء',
+      link: '#',
+      description:
+        'أداة agentic ذاتية الاستضافة تحوّل prompt واحد إلى عرض تقديمي كامل — بدمج PDF parsing وweb search وRAG grounding وLLM structured output لتوزيع الشرائح، وrouting agent يقرر لكل شريحة إعادة استخدام الصور أو البحث online أو توليد صور جديدة عبر VLMs. جرّب العرض التفاعلي بالأسفل.',
+      keywords: ['LLM', 'Agentic AI', 'RAG', 'LangGraph', 'VLMs'],
+      demo: 'ppgen',
+    },
   ],
 
   publications: [

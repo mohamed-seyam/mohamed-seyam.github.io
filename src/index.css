@@ -471,6 +471,161 @@ a { color: inherit; text-decoration: none; }
   font-size: 0.85rem;
 }
 
+/* ===== ppgen animated flow (horizontal, branching) ===== */
+.flow {
+  margin-top: 1.25rem;
+  padding: 1.75rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background:
+    radial-gradient(520px circle at 0% 0%, rgba(124, 58, 237, 0.05), transparent 60%),
+    var(--bg-elev);
+  overflow-x: auto;
+}
+.flow-track {
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  padding-bottom: 0.25rem;
+}
+.flow-cell { display: flex; align-items: center; }
+
+.flow-node {
+  width: 116px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+.flow-node.done, .flow-node.active { opacity: 1; }
+.flow-ic {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 1.5px solid var(--border-strong);
+  color: var(--text-faint);
+  transition: all 0.4s ease;
+}
+.flow-ic svg { width: 22px; height: 22px; }
+.flow-ic.sm { width: 26px; height: 26px; border-radius: 8px; }
+.flow-ic.sm svg { width: 15px; height: 15px; }
+.flow-node { --c1: var(--brand); --c2: #8b5cf6; }
+.flow-node.done .flow-ic {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  border-color: transparent;
+  color: #334155;
+}
+.flow-node.active .flow-ic {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  border-color: transparent;
+  color: #334155;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--c1) 35%, transparent);
+}
+.flow-node strong { font-size: 0.86rem; letter-spacing: -0.01em; }
+.flow-node small { font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-faint); line-height: 1.3; }
+
+/* connector between cells */
+.flow-link {
+  width: 30px;
+  height: 2px;
+  flex-shrink: 0;
+  background: var(--border-strong);
+  position: relative;
+  transition: background 0.4s ease;
+}
+.flow-link::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: -1px;
+  top: 50%;
+  width: 6px; height: 6px;
+  border-top: 2px solid var(--border-strong);
+  border-inline-end: 2px solid var(--border-strong);
+  transform: translateY(-50%) rotate(45deg);
+  transition: border-color 0.4s ease;
+}
+[dir="rtl"] .flow-link::after { transform: translateY(-50%) rotate(225deg); }
+.flow-link { --lc: var(--brand); }
+.flow-link.done { background: var(--lc); }
+.flow-link.done::after { border-color: var(--lc); }
+
+/* branch box */
+.flow-branch {
+  flex-shrink: 0;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 14px;
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  opacity: 0.5;
+  transition: all 0.4s ease;
+  background: #fff;
+}
+.flow-branch { --c1: var(--brand); }
+.flow-branch.done, .flow-branch.active { opacity: 1; }
+.flow-branch.active {
+  border-color: var(--c1);
+  border-style: solid;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--c1) 12%, transparent);
+}
+.flow-branch.done { border-color: #ddd6fe; border-style: solid; }
+.flow-branch-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--brand-dark);
+  text-align: center;
+}
+.flow-branch-items { display: flex; flex-direction: column; gap: 0.4rem; }
+.flow-bchip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  background: var(--brand-softer);
+  border: 1px solid #ede9fe;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  white-space: nowrap;
+}
+.flow-bchip { --c1: var(--brand); --c2: #8b5cf6; }
+.flow-bchip .flow-ic.sm {
+  background: #fff;
+  border-color: #ddd6fe;
+  color: var(--c1);
+}
+.flow-branch.done .flow-bchip .flow-ic.sm,
+.flow-branch.active .flow-bchip .flow-ic.sm {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  border-color: transparent;
+  color: #334155;
+}
+
+/* Tablet / mobile: wrap the pipeline into multiple rows instead of scrolling. */
+@media (max-width: 900px) {
+  .flow { overflow-x: visible; }
+  .flow-track {
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.1rem 0.9rem;
+  }
+  .flow-link { display: none; }
+  .flow-node { justify-content: flex-start; }
+  .flow-branch { align-self: center; }
+}
+
 /* ===== Publications ===== */
 .pub-row {
   display: grid;

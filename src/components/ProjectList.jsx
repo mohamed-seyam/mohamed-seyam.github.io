@@ -1,5 +1,6 @@
 import Tags from './Tags'
 import ModelEmbed from './ModelEmbed'
+import PpgenFlow from './PpgenFlow'
 import { useLang } from '../i18n'
 
 // Renders the list of project rows. Shared by the home preview and the
@@ -16,6 +17,7 @@ export default function ProjectList({ projects, showModels = true }) {
             <p className="project-desc">{project.description}</p>
             <Tags items={project.keywords} />
             {showModels && project.model && <ModelEmbed src={project.model} />}
+            {showModels && project.demo === 'ppgen' && <PpgenFlow />}
           </div>
           <a
             className="project-link"
