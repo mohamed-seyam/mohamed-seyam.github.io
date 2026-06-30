@@ -121,6 +121,16 @@ const en = {
       keywords: ['LLM', 'Agentic AI', 'RAG', 'LangGraph', 'VLMs'],
       demo: 'ppgen',
     },
+    {
+      title: 'APA — Agentic Process Automation',
+      categoryKey: 'llm',
+      category: 'LLM & Agentic AI',
+      link: '#',
+      description:
+        'A full Agentic Process Automation platform: describe an automation in plain language and a LangGraph agent pipeline analyzes the prompt, retrieves matching services via RAG, plans the steps, extracts conditions, and wires a validated, executable workflow — advancing well beyond rule-based RPA. Watch a generated automation build and run on the canvas below.',
+      keywords: ['Agentic AI', 'LangGraph', 'LLMs', 'RAG', 'Workflow Automation', 'Salla', 'Odoo'],
+      demo: 'apa',
+    },
   ],
 
   publications: [

@@ -120,6 +120,16 @@ const ar = {
       keywords: ['LLM', 'Agentic AI', 'RAG', 'LangGraph', 'VLMs'],
       demo: 'ppgen',
     },
+    {
+      title: 'APA — Agentic Process Automation',
+      categoryKey: 'llm',
+      category: 'نماذج لغوية ووكلاء',
+      link: '#',
+      description:
+        'منصة Agentic Process Automation متكاملة: تصف الأتمتة التي تريدها بلغة طبيعية، فيقوم LangGraph agent pipeline بتحليل الـ prompt، واسترجاع الخدمات المناسبة عبر RAG، وتخطيط الخطوات، واستخراج الشروط، وربط workflow قابل للتنفيذ ومُتحقَّق منه — متجاوزًا الـ rule-based RPA التقليدي. شاهد بناء وتشغيل أتمتة مُولّدة على الـ canvas بالأسفل.',
+      keywords: ['Agentic AI', 'LangGraph', 'LLMs', 'RAG', 'Workflow Automation', 'Salla', 'Odoo'],
+      demo: 'apa',
+    },
   ],
 
   publications: [
