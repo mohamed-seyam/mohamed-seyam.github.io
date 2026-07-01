@@ -101,16 +101,6 @@ const ar = {
 
   projects: [
     {
-      title: '3D Individual Teeth Segmentation',
-      categoryKey: 'medical',
-      category: 'طبي',
-      link: '#',
-      description:
-        'تجزئة instance لكل سنّة على حدة من مجسمات المسح الفموي ثلاثي الأبعاد (intraoral scans). يتم اكتشاف كل سنّة وتمييزها مباشرةً على الـ mesh الخام، مما يتيح تحليلًا لكل سنّة في تطبيقات تقويم الأسنان. يمكنك تدوير وتكبير مسح حقيقي للفك السفلي بالأسفل.',
-      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
-      model: '/assets/models/teeth-lower.obj',
-    },
-    {
       title: 'ppgen — AI Presentation Generator',
       categoryKey: 'llm',
       category: 'نماذج لغوية ووكلاء',
@@ -129,6 +119,16 @@ const ar = {
         'منصة Agentic Process Automation متكاملة: تصف الأتمتة التي تريدها بلغة طبيعية، فيقوم LangGraph agent pipeline بتحليل الـ prompt، واسترجاع الخدمات المناسبة عبر RAG، وتخطيط الخطوات، واستخراج الشروط، وربط workflow قابل للتنفيذ ومُتحقَّق منه — متجاوزًا الـ rule-based RPA التقليدي. شاهد بناء وتشغيل أتمتة مُولّدة على الـ canvas بالأسفل.',
       keywords: ['Agentic AI', 'LangGraph', 'LLMs', 'RAG', 'Workflow Automation', 'Salla', 'Odoo'],
       demo: 'apa',
+    },
+    {
+      title: '3D Individual Teeth Segmentation',
+      categoryKey: 'medical',
+      category: 'طبي',
+      link: '#',
+      description:
+        'تجزئة instance لكل سنّة على حدة من مجسمات المسح الفموي ثلاثي الأبعاد (intraoral scans). يتم اكتشاف كل سنّة وتمييزها مباشرةً على الـ mesh الخام، مما يتيح تحليلًا لكل سنّة في تطبيقات تقويم الأسنان. يمكنك تدوير وتكبير مسح حقيقي للفك السفلي بالأسفل.',
+      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
+      model: '/assets/models/teeth-lower.obj',
     },
   ],
 

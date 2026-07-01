@@ -102,16 +102,6 @@ const en = {
   // category (the localized label shown on the filter button).
   projects: [
     {
-      title: '3D Individual Teeth Segmentation',
-      categoryKey: 'medical',
-      category: 'Medical',
-      link: '#',
-      description:
-        'Instance segmentation of individual teeth from 3D intraoral scan meshes. Each tooth is detected and labeled directly on the raw mesh, enabling per-tooth analysis for orthodontic and dental workflows. Rotate and zoom a real lower-jaw scan below.',
-      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
-      model: '/assets/models/teeth-lower.obj',
-    },
-    {
       title: 'ppgen — AI Presentation Generator',
       categoryKey: 'llm',
       category: 'LLM & Agentic AI',
@@ -130,6 +120,16 @@ const en = {
         'A full Agentic Process Automation platform: describe an automation in plain language and a LangGraph agent pipeline analyzes the prompt, retrieves matching services via RAG, plans the steps, extracts conditions, and wires a validated, executable workflow — advancing well beyond rule-based RPA. Watch a generated automation build and run on the canvas below.',
       keywords: ['Agentic AI', 'LangGraph', 'LLMs', 'RAG', 'Workflow Automation', 'Salla', 'Odoo'],
       demo: 'apa',
+    },
+    {
+      title: '3D Individual Teeth Segmentation',
+      categoryKey: 'medical',
+      category: 'Medical',
+      link: '#',
+      description:
+        'Instance segmentation of individual teeth from 3D intraoral scan meshes. Each tooth is detected and labeled directly on the raw mesh, enabling per-tooth analysis for orthodontic and dental workflows. Rotate and zoom a real lower-jaw scan below.',
+      keywords: ['3D Mesh', 'Instance Segmentation', 'PointNet', 'Dental AI', 'PyTorch'],
+      model: '/assets/models/teeth-lower.obj',
     },
   ],
 
