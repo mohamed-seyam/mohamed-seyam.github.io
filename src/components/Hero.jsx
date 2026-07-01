@@ -81,6 +81,14 @@ export default function Hero() {
                 </div>
               ))}
             </div>
+            <a className="hero-projects-link" href="/projects.html">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                <path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" />
+                <path d="M12 2v20M3 7l9 5 9-5" />
+              </svg>
+              {ui.allProjects}
+              <span className="hero-projects-arrow" aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </div>
