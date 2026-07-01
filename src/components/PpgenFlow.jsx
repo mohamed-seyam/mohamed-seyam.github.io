@@ -25,7 +25,7 @@ const STR = {
   en: {
     head: 'ppgen · describe your deck',
     file: 'rag_whitepaper.pdf', filePages: '12 pages', source: 'grounded · rag_whitepaper.pdf',
-    prompt: 'Turn this PDF into a 5-slide exec deck on Retrieval-Augmented Generation.',
+    prompt: 'Turn this PDF into a 6-slide exec deck on Retrieval-Augmented Generation.',
     editPrompt: 'Make “How it works” punchier and regenerate its image in a teal theme.',
     imgPrompt: 'Generate a cover image for the intro slide.',
     botOutline: 'Reading PDF · drafting outline…',
@@ -60,7 +60,7 @@ const STR = {
   ar: {
     head: 'ppgen · صِف العرض الذي تريده',
     file: 'rag_whitepaper.pdf', filePages: '12 صفحة', source: 'مُسند · rag_whitepaper.pdf',
-    prompt: 'حوّل ملف الـ PDF إلى عرض من 5 شرائح عن Retrieval-Augmented Generation.',
+    prompt: 'حوّل ملف الـ PDF إلى عرض من 6 شرائح عن Retrieval-Augmented Generation.',
     editPrompt: 'اجعل شريحة «How it works» أكثر إيجازًا وأعد توليد صورتها بطابع تركوازي.',
     imgPrompt: 'ولّد صورة غلاف لشريحة المقدمة.',
     botOutline: 'قراءة الـ PDF · إعداد المخطّط…',
@@ -78,13 +78,13 @@ const STR = {
     deck: [
       { type: 'title', otl: 'مقدمة — ما هو RAG ولماذا الآن', accent: '#a78bfa', title: 'شرح الـ RAG', subtitle: 'كيف يحوّل الاسترجاع نموذجًا عامًا إلى خبير في مجالك' },
       { type: 'content', otl: 'لماذا الإسناد مهم لإجابات موثوقة', kicker: 'السياق', accent: '#f472b6', img: '/assets/slides/art-pink.svg', title: 'لماذا يهم؟', bullets: ['النماذج تهلوس بثقة بدون إسناد', 'RAG يضخّ حقائق موثوقة ومحدّثة وقت الاستعلام', 'كل ادعاء يمكن تتبّعه إلى مصدره'] },
-      { type: 'content', otl: 'كيف يعمل الاسترجاع المعزّز بالتوليد خطوة بخطوة', kicker: 'الآلية', accent: '#38bdf8', img: '/assets/slides/art-sky.svg', title: 'كيف يعمل؟', bullets: ['تحويل مستنداتك إلى vectors وفهرستها', 'استرجاع الأجزاء الأكثر صلة لكل سؤال', 'توليد إجابة مُسندة بمصادر'] },
-      { type: 'diagram', otl: 'خط أنابيب RAG في لمحة', accent: '#8b5cf6', title: 'خط أنابيب RAG', steps: [
-        { icon: 'query', label: 'السؤال', sub: 'query' },
-        { icon: 'embed', label: 'التضمين', sub: 'إلى vectors' },
-        { icon: 'db', label: 'الاسترجاع', sub: 'top-k · Vector DB' },
-        { icon: 'llm', label: 'النموذج', sub: 'توليد مُعزَّز' },
-        { icon: 'answer', label: 'الإجابة', sub: 'مُسندة بمصادر' },
+      { type: 'content', otl: 'كيف يعمل الـ RAG خطوة بخطوة', kicker: 'الآلية', accent: '#38bdf8', img: '/assets/slides/art-sky.svg', title: 'كيف يعمل؟', bullets: ['تحويل مستنداتك إلى vectors وفهرستها', 'استرجاع الأجزاء الأكثر صلة لكل سؤال', 'توليد إجابة مُسندة بمصادر'] },
+      { type: 'diagram', otl: 'خط الـ RAG pipeline في لمحة', accent: '#8b5cf6', title: 'RAG pipeline', steps: [
+        { icon: 'query', label: 'Query', sub: 'سؤال المستخدم' },
+        { icon: 'embed', label: 'Embed', sub: 'تحويل إلى vectors' },
+        { icon: 'db', label: 'Retrieve', sub: 'top-k · Vector DB' },
+        { icon: 'llm', label: 'LLM', sub: 'توليد مُعزَّز' },
+        { icon: 'answer', label: 'Answer', sub: 'إجابة مُسندة' },
       ] },
       { type: 'stat', otl: 'الأثر القابل للقياس على دقة الحقائق', accent: '#34d399', value: '3×', label: 'أخطاء واقعية أقل مقابل LLM خام' },
       { type: 'closing', otl: 'الخلاصة — ثبّت ذكاءك على بيانات حقيقية ومُسندة', accent: '#fbbf24', title: 'ثبّت ذكاءك على الحقائق', subtitle: 'من التخمين الواثق إلى إجابات مُسندة' },
