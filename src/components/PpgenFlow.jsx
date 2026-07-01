@@ -1,12 +1,16 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLang } from '../i18n'
 
-/* Stroke icons (inherit currentColor). */
 const Ico = {
   deck: 'M3 4h18v12H3V4zm6 16h6M12 16v4',
   check: 'M5 12l4 4 10-10',
   pdf: 'M6 2h8l4 4v16H6V2zm8 0v4h4M9 13h6M9 16h4',
   spark: 'M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z',
+  query: 'M4 4h16v11H7l-3 3V4z',
+  embed: 'M4 8h16M4 12h16M4 16h12',
+  db: 'M4 6c0-1.1 3.6-2 8-2s8 .9 8 2v12c0 1.1-3.6 2-8 2s-8-.9-8-2V6zm0 0c0 1.1 3.6 2 8 2s8-.9 8-2',
+  llm: 'M8 5L4 12l4 7M16 5l4 7-4 7',
+  answer: 'M4 4h16v11H7l-3 3V4zM8.5 9.5l2 2 4-4',
 }
 function Glyph({ d }) {
   return (
@@ -20,7 +24,7 @@ function Glyph({ d }) {
 const STR = {
   en: {
     head: 'ppgen · describe your deck',
-    file: 'rag_whitepaper.pdf', filePages: '12 pages',
+    file: 'rag_whitepaper.pdf', filePages: '12 pages', source: 'grounded · rag_whitepaper.pdf',
     prompt: 'Turn this PDF into a 5-slide exec deck on Retrieval-Augmented Generation.',
     editPrompt: 'Make “How it works” punchier and regenerate its image in a teal theme.',
     imgPrompt: 'Generate a cover image for the intro slide.',
@@ -32,23 +36,30 @@ const STR = {
     botImg: 'Generating cover image · Flux…',
     botImgDone: 'Cover image added to slide 1',
     outlineHead: (n) => `Outline · ${n} slides`,
-    caps: { idle: 'waiting for prompt', outline: 'drafting outline', design: 'designing slide', edit: 'editing slide 3', image: 'creating cover image', ready: 'deck ready' },
+    caps: { idle: 'waiting for prompt', outline: 'drafting outline', design: 'writing slide', edit: 'editing slide 3', image: 'creating cover image', ready: 'deck ready' },
     stages: ['parse_docs · Docling', 'web_search · DuckDuckGo', 'rag_retrieval · pgvector + Qdrant', 'structure_slides · LLM', 'route_assets · Flux / Icon / VLM'],
     editStages: ['locate_slide', 'rewrite_content · LLM', 'regenerate_image · Flux'],
     imgStages: ['compose_prompt · LLM', 'generate_image · Flux'],
     deck: [
-      { type: 'title', otl: 'Introduction', accent: '#a78bfa', title: 'RAG, Explained', subtitle: 'Grounding language models in your own data' },
-      { type: 'content', otl: 'Why it matters', accent: '#f472b6', img: 330, title: 'Why it matters', bullets: ['LLMs hallucinate without context', 'RAG injects trusted, current facts', 'Every answer can cite its source'] },
-      { type: 'content', otl: 'How it works', accent: '#38bdf8', img: 205, title: 'How it works', bullets: ['Embed & index your documents', 'Retrieve the most relevant chunks', 'Generate grounded, sourced answers'] },
-      { type: 'stat', otl: 'The impact', accent: '#34d399', value: '3×', label: 'fewer factual errors vs. a raw LLM' },
-      { type: 'closing', otl: 'Takeaway', accent: '#fbbf24', title: 'Ground your AI', subtitle: 'From guesswork to evidence' },
+      { type: 'title', otl: 'Introduction — what RAG is and why it matters now', accent: '#a78bfa', title: 'RAG, Explained', subtitle: 'How retrieval turns a general model into a domain expert' },
+      { type: 'content', otl: 'Why grounding matters for trustworthy answers', kicker: 'Context', accent: '#f472b6', img: '/assets/slides/art-pink.svg', title: 'Why it matters', bullets: ['LLMs confidently hallucinate without grounding', 'RAG injects trusted, up-to-date facts at query time', 'Every claim can be traced back to its source'] },
+      { type: 'content', otl: 'How retrieval-augmented generation works, step by step', kicker: 'Mechanism', accent: '#38bdf8', img: '/assets/slides/art-sky.svg', title: 'How it works', bullets: ['Embed and index your documents into vectors', 'Retrieve the most relevant chunks per question', 'Generate a grounded, cited answer'] },
+      { type: 'diagram', otl: 'The RAG pipeline at a glance', accent: '#8b5cf6', title: 'The RAG pipeline', steps: [
+        { icon: 'query', label: 'Query', sub: 'question' },
+        { icon: 'embed', label: 'Embed', sub: 'to vectors' },
+        { icon: 'db', label: 'Retrieve', sub: 'top-k · Vector DB' },
+        { icon: 'llm', label: 'LLM', sub: 'augment + generate' },
+        { icon: 'answer', label: 'Answer', sub: 'grounded + cited' },
+      ] },
+      { type: 'stat', otl: 'The measurable impact on factual accuracy', accent: '#34d399', value: '3×', label: 'fewer factual errors versus a raw LLM baseline' },
+      { type: 'closing', otl: 'Takeaway — ground your AI in real, sourced data', accent: '#fbbf24', title: 'Ground your AI', subtitle: 'From confident guesses to sourced answers' },
     ],
-    edit: { idx: 2, img: 168, bulletIdx: 1, bullet: 'Top-k semantic retrieval', accent: '#2dd4bf' },
-    cover: { idx: 0, img: 265 },
+    edit: { idx: 2, img: '/assets/slides/art-teal.svg', bulletIdx: 1, bullet: 'Top-k semantic retrieval per query', accent: '#2dd4bf' },
+    cover: { idx: 0, img: '/assets/slides/art-violet.svg' },
   },
   ar: {
     head: 'ppgen · صِف العرض الذي تريده',
-    file: 'rag_whitepaper.pdf', filePages: '12 صفحة',
+    file: 'rag_whitepaper.pdf', filePages: '12 صفحة', source: 'مُسند · rag_whitepaper.pdf',
     prompt: 'حوّل ملف الـ PDF إلى عرض من 5 شرائح عن Retrieval-Augmented Generation.',
     editPrompt: 'اجعل شريحة «How it works» أكثر إيجازًا وأعد توليد صورتها بطابع تركوازي.',
     imgPrompt: 'ولّد صورة غلاف لشريحة المقدمة.',
@@ -60,33 +71,43 @@ const STR = {
     botImg: 'توليد صورة الغلاف · Flux…',
     botImgDone: 'أُضيفت صورة الغلاف إلى الشريحة 1',
     outlineHead: (n) => `المخطّط · ${n} شرائح`,
-    caps: { idle: 'بانتظار الـ prompt', outline: 'إعداد المخطّط', design: 'تصميم الشريحة', edit: 'تعديل الشريحة 3', image: 'توليد صورة الغلاف', ready: 'العرض جاهز' },
+    caps: { idle: 'بانتظار الـ prompt', outline: 'إعداد المخطّط', design: 'كتابة الشريحة', edit: 'تعديل الشريحة 3', image: 'توليد صورة الغلاف', ready: 'العرض جاهز' },
     stages: ['parse_docs · Docling', 'web_search · DuckDuckGo', 'rag_retrieval · pgvector + Qdrant', 'structure_slides · LLM', 'route_assets · Flux / Icon / VLM'],
     editStages: ['locate_slide', 'rewrite_content · LLM', 'regenerate_image · Flux'],
     imgStages: ['compose_prompt · LLM', 'generate_image · Flux'],
     deck: [
-      { type: 'title', otl: 'مقدمة', accent: '#a78bfa', title: 'شرح الـ RAG', subtitle: 'إسناد نماذج اللغة إلى بياناتك الخاصة' },
-      { type: 'content', otl: 'لماذا يهم', accent: '#f472b6', img: 330, title: 'لماذا يهم؟', bullets: ['النماذج تهلوس بدون سياق', 'RAG يضخّ حقائق موثوقة ومحدّثة', 'كل إجابة يمكن أن تُسند إلى مصدرها'] },
-      { type: 'content', otl: 'كيف يعمل', accent: '#38bdf8', img: 205, title: 'كيف يعمل؟', bullets: ['فهرسة مستنداتك عبر embeddings', 'استرجاع الأجزاء الأكثر صلة', 'توليد إجابات مُسندة بمصادر'] },
-      { type: 'stat', otl: 'الأثر', accent: '#34d399', value: '3×', label: 'أخطاء واقعية أقل مقابل LLM خام' },
-      { type: 'closing', otl: 'الخلاصة', accent: '#fbbf24', title: 'ثبّت ذكاءك على الحقائق', subtitle: 'من التخمين إلى الدليل' },
+      { type: 'title', otl: 'مقدمة — ما هو RAG ولماذا الآن', accent: '#a78bfa', title: 'شرح الـ RAG', subtitle: 'كيف يحوّل الاسترجاع نموذجًا عامًا إلى خبير في مجالك' },
+      { type: 'content', otl: 'لماذا الإسناد مهم لإجابات موثوقة', kicker: 'السياق', accent: '#f472b6', img: '/assets/slides/art-pink.svg', title: 'لماذا يهم؟', bullets: ['النماذج تهلوس بثقة بدون إسناد', 'RAG يضخّ حقائق موثوقة ومحدّثة وقت الاستعلام', 'كل ادعاء يمكن تتبّعه إلى مصدره'] },
+      { type: 'content', otl: 'كيف يعمل الاسترجاع المعزّز بالتوليد خطوة بخطوة', kicker: 'الآلية', accent: '#38bdf8', img: '/assets/slides/art-sky.svg', title: 'كيف يعمل؟', bullets: ['تحويل مستنداتك إلى vectors وفهرستها', 'استرجاع الأجزاء الأكثر صلة لكل سؤال', 'توليد إجابة مُسندة بمصادر'] },
+      { type: 'diagram', otl: 'خط أنابيب RAG في لمحة', accent: '#8b5cf6', title: 'خط أنابيب RAG', steps: [
+        { icon: 'query', label: 'السؤال', sub: 'query' },
+        { icon: 'embed', label: 'التضمين', sub: 'إلى vectors' },
+        { icon: 'db', label: 'الاسترجاع', sub: 'top-k · Vector DB' },
+        { icon: 'llm', label: 'النموذج', sub: 'توليد مُعزَّز' },
+        { icon: 'answer', label: 'الإجابة', sub: 'مُسندة بمصادر' },
+      ] },
+      { type: 'stat', otl: 'الأثر القابل للقياس على دقة الحقائق', accent: '#34d399', value: '3×', label: 'أخطاء واقعية أقل مقابل LLM خام' },
+      { type: 'closing', otl: 'الخلاصة — ثبّت ذكاءك على بيانات حقيقية ومُسندة', accent: '#fbbf24', title: 'ثبّت ذكاءك على الحقائق', subtitle: 'من التخمين الواثق إلى إجابات مُسندة' },
     ],
-    edit: { idx: 2, img: 168, bulletIdx: 1, bullet: 'استرجاع دلالي top-k', accent: '#2dd4bf' },
-    cover: { idx: 0, img: 265 },
+    edit: { idx: 2, img: '/assets/slides/art-teal.svg', bulletIdx: 1, bullet: 'استرجاع دلالي top-k لكل استعلام', accent: '#2dd4bf' },
+    cover: { idx: 0, img: '/assets/slides/art-violet.svg' },
   },
 }
 
-// Faux "generated" image: layered gradients keyed by hue, with a Flux badge.
-function GenImage({ hue, v, full }) {
+// A real (bundled) generated image, revealed with a generation shimmer.
+function GenImage({ src, v, full }) {
   return (
-    <div className={`ppg-genimg${full ? ' full' : ''}`} key={`${hue}-${v}`} style={{ '--h': hue }}>
+    <div className={`ppg-genimg${full ? ' full' : ''}`} key={`${src}-${v}`}>
+      <img src={src} alt="" loading="lazy" />
       <span className="ppg-genimg-badge"><Glyph d={Ico.spark} /> Flux</span>
     </div>
   )
 }
 
-function Slide({ b }) {
-  const { phase, slide, imgV, markIdx } = b
+function Caret() { return <span className="apa-caret" /> }
+
+function Slide({ b, source }) {
+  const { phase, slide, head, sub, lines, caret, imgV } = b
   if (phase === 'skeleton') {
     return (
       <div className="ppg-slide skeleton" style={{ '--ac': slide.accent }}>
@@ -101,11 +122,11 @@ function Slide({ b }) {
     const hasImg = slide.img != null
     return (
       <div className="ppg-slide cover build" style={{ '--ac': slide.accent }}>
-        {hasImg && <GenImage hue={slide.img} v={imgV || 0} full />}
+        {hasImg && <GenImage src={slide.img} v={imgV || 0} full />}
         {hasImg && <span className="ppg-cover-tint" />}
         <div className={`ppg-cover-text${hasImg ? ' on-img' : ''}`}>
-          <h5>{slide.title}</h5>
-          <p>{slide.subtitle}</p>
+          <h5>{head}{caret === 'head' && <Caret />}</h5>
+          <p>{sub}{caret === 'sub' && <Caret />}</p>
         </div>
       </div>
     )
@@ -118,17 +139,44 @@ function Slide({ b }) {
       </div>
     )
   }
+  if (slide.type === 'diagram') {
+    return (
+      <div className="ppg-slide diagram build" style={{ '--ac': slide.accent }}>
+        <h5>{head}{caret === 'head' && <Caret />}</h5>
+        {phase === 'done' && (
+          <div className="ppg-diagram">
+            {slide.steps.map((st, i) => (
+              <Fragment key={i}>
+                <div className="ppg-dnode" style={{ animationDelay: `${i * 130}ms` }}>
+                  <span className="ppg-dnode-ic"><Glyph d={Ico[st.icon]} /></span>
+                  <strong>{st.label}</strong>
+                  <small>{st.sub}</small>
+                </div>
+                {i < slide.steps.length - 1 && (
+                  <span className="ppg-darrow" style={{ animationDelay: `${i * 130 + 65}ms` }} />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
   return (
     <div className="ppg-slide content build" style={{ '--ac': slide.accent }}>
       <div className="ppg-body">
-        <h5>{slide.title}</h5>
+        {slide.kicker && <span className="ppg-kicker">{slide.kicker}</span>}
+        <h5>{head}{caret === 'head' && <Caret />}</h5>
         <ul>
-          {slide.bullets.map((txt, i) => (
-            <li key={i} className={markIdx === i ? 'mark' : ''} style={{ animationDelay: `${120 + i * 120}ms` }}>{txt}</li>
+          {lines.map((txt, i) => (
+            <li key={i} className={b.markIdx === i ? 'mark' : ''}>
+              {txt}{caret === i && <Caret />}
+            </li>
           ))}
         </ul>
+        <span className="ppg-source"><Glyph d={Ico.check} />{source}</span>
       </div>
-      <GenImage hue={slide.img} v={imgV || 0} />
+      <GenImage src={slide.img} v={imgV || 0} />
     </div>
   )
 }
@@ -150,7 +198,6 @@ export default function PpgenFlow() {
     return () => io.disconnect()
   }, [])
 
-  // keep the chat scrolled to the latest message
   useEffect(() => {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
   }, [sc])
@@ -166,7 +213,9 @@ export default function PpgenFlow() {
     const s = { messages: [], mode: 'outline', outline: 0, build: null, thumbs: [], cap: S.caps.idle }
     const commit = () => setSc({
       messages: s.messages.map((m) => ({ ...m, trace: m.trace ? [...m.trace] : undefined })),
-      mode: s.mode, outline: s.outline, build: s.build && { ...s.build }, thumbs: [...s.thumbs], cap: s.cap,
+      mode: s.mode, outline: s.outline,
+      build: s.build && { ...s.build, lines: s.build.lines ? [...s.build.lines] : [] },
+      thumbs: [...s.thumbs], cap: s.cap,
     })
     const last = () => s.messages[s.messages.length - 1]
     const pushUser = (file = null) => { s.messages.push({ role: 'user', file, text: '', caret: false }); commit() }
@@ -180,27 +229,59 @@ export default function PpgenFlow() {
       for (let i = 1; i <= target.length && alive; i++) { m.text = target.slice(0, i); commit(); await wait(15) }
       m.caret = false; commit()
     }
+    // stream a string word-by-word into build via apply(partial)
+    const stream = async (apply, target, ms = 42) => {
+      const words = String(target).split(' ')
+      let acc = ''
+      for (let i = 0; i < words.length && alive; i++) {
+        acc += (i ? ' ' : '') + words[i]; apply(acc); commit(); await wait(ms)
+      }
+    }
+    const fullBuild = (idx, slide, extra = {}) => ({
+      idx, phase: 'done', slide, head: slide.title || '', sub: slide.subtitle || '',
+      lines: slide.bullets ? [...slide.bullets] : [], caret: null, ...extra,
+    })
+
+    async function writeSlide(idx, slide) {
+      s.cap = `${S.caps.design} ${idx + 1}`
+      s.build = { idx, phase: 'skeleton', slide }; commit(); await wait(430)
+      s.build = { idx, phase: 'stream', slide, head: '', sub: '', lines: [], caret: 'head', imgV: 0 }; commit(); await wait(120)
+      if (slide.type === 'title' || slide.type === 'closing') {
+        await stream((v) => { s.build.head = v }, slide.title)
+        s.build.caret = 'sub'; commit()
+        await stream((v) => { s.build.sub = v }, slide.subtitle)
+      } else if (slide.type === 'stat') {
+        s.build = fullBuild(idx, slide); commit(); await wait(300)
+      } else if (slide.type === 'diagram') {
+        await stream((v) => { s.build.head = v }, slide.title)
+        s.build.caret = null; s.build.phase = 'done'; commit()
+        await wait(slide.steps.length * 140 + 350)
+      } else {
+        await stream((v) => { s.build.head = v }, slide.title)
+        for (let j = 0; j < slide.bullets.length && alive; j++) {
+          s.build.lines.push(''); s.build.caret = j; commit()
+          await stream((v) => { s.build.lines[j] = v }, slide.bullets[j], 34)
+        }
+      }
+      s.build.caret = null; s.build.phase = 'done'; commit(); await wait(260)
+      s.thumbs.push(idx); commit(); await wait(140)
+    }
 
     async function loop() {
       while (alive) {
         Object.assign(s, { messages: [], mode: 'outline', outline: 0, build: null, thumbs: [], cap: S.caps.idle })
         commit(); await wait(500)
 
-        // 1 — upload + prompt → outline → build
+        // 1 — upload + prompt → outline → write slides
         pushUser({ name: S.file, pages: S.filePages }); await wait(650)
         await typeUser(S.prompt); await wait(300)
         pushBot(S.botOutline); s.cap = S.caps.outline; commit(); await wait(450)
         await pushTrace(S.stages.slice(0, 3), 360)
-        for (let i = 0; i < deck.length && alive; i++) { s.outline = i + 1; commit(); await wait(330) }
-        await wait(450)
-        setBot(S.botBuild); s.mode = 'deck'; last().trace.push(S.stages[3]); commit(); await wait(400)
-        last().trace.push(S.stages[4]); commit(); await wait(300)
-        for (let i = 0; i < deck.length && alive; i++) {
-          s.cap = `${S.caps.design} ${i + 1}`
-          s.build = { idx: i, phase: 'skeleton', slide: deck[i] }; commit(); await wait(480)
-          s.build = { idx: i, phase: 'content', slide: deck[i], imgV: 0 }; commit(); await wait(800)
-          s.thumbs.push(i); commit(); await wait(150)
-        }
+        for (let i = 0; i < deck.length && alive; i++) { s.outline = i + 1; commit(); await wait(320) }
+        await wait(400)
+        setBot(S.botBuild); s.mode = 'deck'; last().trace.push(S.stages[3]); commit(); await wait(380)
+        last().trace.push(S.stages[4]); commit(); await wait(280)
+        for (let i = 0; i < deck.length && alive; i++) await writeSlide(i, deck[i])
         setBot(S.botReady(deck.length), 'done'); s.cap = S.caps.ready; commit(); await wait(1900)
 
         // 2 — edit prompt (appended) → rewrite + regenerate image
@@ -211,7 +292,7 @@ export default function PpgenFlow() {
         deck[e.idx] = { ...deck[e.idx], accent: e.accent }
         s.build = { idx: e.idx, phase: 'skeleton', slide: deck[e.idx] }; commit(); await wait(500)
         deck[e.idx].bullets[e.bulletIdx] = e.bullet; deck[e.idx].img = e.img
-        s.build = { idx: e.idx, phase: 'content', slide: deck[e.idx], imgV: 1, markIdx: e.bulletIdx }; commit(); await wait(850)
+        s.build = fullBuild(e.idx, deck[e.idx], { imgV: 1, markIdx: e.bulletIdx }); commit(); await wait(950)
         setBot(S.botEditDone, 'done'); s.cap = S.caps.ready; commit(); await wait(1900)
 
         // 3 — create image prompt (appended) → generate cover image
@@ -221,7 +302,7 @@ export default function PpgenFlow() {
         const c = S.cover
         s.build = { idx: c.idx, phase: 'skeleton', slide: { ...deck[c.idx], img: c.img } }; commit(); await wait(560)
         deck[c.idx] = { ...deck[c.idx], img: c.img }
-        s.build = { idx: c.idx, phase: 'content', slide: deck[c.idx], imgV: 1 }; commit(); await wait(950)
+        s.build = fullBuild(c.idx, deck[c.idx], { imgV: 1 }); commit(); await wait(1000)
         setBot(S.botImgDone, 'done'); s.cap = S.caps.ready; commit(); await wait(2600)
       }
     }
@@ -230,8 +311,8 @@ export default function PpgenFlow() {
   }, [playing, lang])
 
   const S = STR[lang] || STR.en
-  const running = sc.messages.length > 0 && sc.messages[sc.messages.length - 1].role === 'bot'
-    && sc.messages[sc.messages.length - 1].status === 'work'
+  const lastMsg = sc.messages[sc.messages.length - 1]
+  const running = lastMsg?.role === 'bot' && lastMsg.status === 'work'
 
   return (
     <div className="apa" ref={ref}>
@@ -252,7 +333,7 @@ export default function PpgenFlow() {
                 </div>
               )}
               {(m.text || m.caret) && (
-                <div className="apa-bubble user">{m.text}{m.caret && <span className="apa-caret" />}</div>
+                <div className="apa-bubble user">{m.text}{m.caret && <Caret />}</div>
               )}
             </Fragment>
           ) : (
@@ -296,7 +377,7 @@ export default function PpgenFlow() {
           ) : (
             <>
               <div className="ppg-stage">
-                {sc.build ? <Slide b={sc.build} /> : <div className="ppg-slide empty"><Glyph d={Ico.deck} /></div>}
+                {sc.build ? <Slide b={sc.build} source={S.source} /> : <div className="ppg-slide empty"><Glyph d={Ico.deck} /></div>}
               </div>
               <div className="ppg-film">
                 {S.deck.map((slide, i) => (
