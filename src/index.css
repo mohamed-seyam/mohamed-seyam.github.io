@@ -2355,3 +2355,66 @@ a { color: inherit; text-decoration: none; }
 }
 .ns-files { grid-template-columns: minmax(0, 1fr); }
 .dm-frame .ns-screen-upload { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+
+/* ===== Phones: the frame keeps one fixed height too, so each scene is
+   trimmed to fit it instead of growing the page. ===== */
+@media (max-width: 760px) {
+  .dm-frame { height: 680px; min-height: 0; }
+  .dm-frame .bl-main, .ns-main { padding: 14px; gap: 10px; }
+  .dm-hero h4 { font-size: 22px; }
+  .dm-tile { padding: 10px 11px; }
+  .dm-drop { padding: 10px; }
+  .dm-drop small, .bl-hint, .spdf-kicker, .spdf-lead { display: none; }
+  .spdf { margin: 10px; padding: 12px 12px 22px; }
+  .spdf-title { font-size: 13px; margin-bottom: 6px; }
+
+  /* Baleegh call: a compact dialog above the document */
+  .dm-frame .bl-call { align-items: start; align-content: start; gap: 10px; }
+  .bl-call .bl-vm { gap: 0.5rem; padding: 0.7rem; }
+  .bl-call .bl-lens { height: 60px; }
+  .bl-call .bl-stage { gap: 0.35rem; }
+  .bl-call .bl-face, .bl-call .bl-status-hint, .bl-call .bl-key small { display: none; }
+  .bl-call .bl-name { font-size: 16px; }
+  .bl-call .bl-status { min-height: 0; }
+  .bl-call .bl-caption { height: 3.3em; font-size: 14px; }
+  .bl-call .bl-gloss { min-height: 1.4em; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .bl-call .bl-dock { padding: 0.4rem 0.9rem; }
+  .bl-call .bl-key { width: 46px; }
+  .bl-call .bl-key > svg { width: 38px; height: 38px; padding: 10px; }
+
+  /* Baleegh dashboard: first exchange only */
+  .bl-stats > div { padding: 7px 10px; }
+  .bl-stats strong { font-size: 15px; }
+  .bl-transcript li:nth-child(n + 3) { display: none; }
+  .bl-criteria li { padding: 5px 8px; }
+  .bl-review div { grid-template-columns: 96px minmax(0, 1fr); }
+
+  /* Naseh: file list without the preview; chat above a compact document */
+  .dm-frame .ns-screen-upload { grid-template-columns: minmax(0, 1fr); }
+  .ns-screen-upload .dm-viewer { display: none; }
+  .ns-create { max-width: none; }
+  .dm-frame .ns-screen-ask { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 10px; }
+  .dm-frame .ns-chat { height: auto; min-height: 0; }
+  .ns-screen-ask .ns-sources, .ns-screen-ask .ns-chip { display: none; }
+  .ns-log { padding: 0.7rem; gap: 0.6rem; }
+  .ns-input { padding: 0.5rem 0.6rem; }
+  .ns-textarea { min-height: 2.2rem; padding: 0.4rem 0.6rem; }
+  .ns-rail { padding: 6px; gap: 2px; }
+  .ns-rail li { padding: 2px 5px; }
+  .dm-frame .ns-screen-ask .dm-viewer { align-self: end; }
+  .dm-viewer-empty { padding: 2rem 1rem; }
+}
+@media (max-width: 760px) {
+  .bl-call .bl-lens { height: 44px; }
+  .bl-call .spdf th, .bl-call .spdf td { padding: 2px 6px; }
+  .bl-call .spdf-block:last-of-type .spdf-line:last-child, .bl-call .spdf-foot { display: none; }
+  .bl-call .spdf { margin: 8px; padding-bottom: 10px; }
+  .bl-call .spdf-block { margin-bottom: 2px; }
+}
+.ns-project .ns-h { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 760px) {
+  .ns-textarea { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ns-screen-ask .spdf-block .spdf-line:nth-child(n + 4), .ns-screen-ask .spdf-foot { display: none; }
+  .ns-screen-ask .spdf th, .ns-screen-ask .spdf td { padding: 2px 6px; }
+  .ns-screen-ask .spdf { margin: 8px; padding-bottom: 10px; }
+}
