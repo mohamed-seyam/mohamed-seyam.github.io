@@ -6,7 +6,8 @@ import BaleeghFlow from './BaleeghFlow'
 import NasehFlow from './NasehFlow'
 import { useLang } from '../i18n'
 
-// project.demo -> animated visualization rendered under the description.
+// project.demo -> animated visualization. A project with a visualization shows
+// no description: the experience section already describes it.
 const DEMOS = {
   ppgen: PpgenFlow,
   apa: ApaFlow,
@@ -23,11 +24,12 @@ export default function ProjectList({ projects, showModels = true }) {
     <div className="row-list">
       {projects.map((project, i) => {
         const Demo = DEMOS[project.demo]
+        const hasVisual = showModels && (Demo || project.model)
         return (
         <article className="proj-row reveal" id={project.id} key={project.id || i}>
           <div className="proj-body">
             <h3 className="project-title">{project.title}</h3>
-            <p className="project-desc">{project.description}</p>
+            {!hasVisual && <p className="project-desc">{project.description}</p>}
             <Tags items={project.keywords} />
             {showModels && project.model && <ModelEmbed src={project.model} />}
             {showModels && Demo && <Demo />}

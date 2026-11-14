@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLang } from '../i18n'
 import { usePlayer } from './demo/usePlayer'
-import { Chapters, DocRow, DropZone, SamplePdf } from './demo/parts'
+import { Cursor, DocRow, DropZone, SamplePdf } from './demo/parts'
 
 /* A walkthrough of Baleegh in the app's own style, in three scenes: the agent
    wizard, a PDF going into the agent's knowledge base, and a live call whose
@@ -117,7 +117,7 @@ function VoiceLens({ state }) {
     resize()
 
     let last = performance.now()
-    frame = requestAnimationFrame(function step(now) {
+    const step = (now) => {
       const dt = Math.min(now - last, 64) / 1000
       last = now
       const target = LOOKS[stateRef.current] || LOOKS.listening
@@ -133,11 +133,20 @@ function VoiceLens({ state }) {
       current.rgb = current.rgb.map((c, i) => c + (target.rgb[i] - c) * k)
       drawLens(ctx, width, height, reduced ? 1 : clock, current)
       frame = requestAnimationFrame(step)
+    }
+    // Draw only while the lens is on screen.
+    const onScreen = new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(frame)
+      if (!entry.isIntersecting) return
+      last = performance.now()
+      frame = requestAnimationFrame(step)
     })
+    onScreen.observe(canvas)
 
     return () => {
       cancelAnimationFrame(frame)
       observer.disconnect()
+      onScreen.disconnect()
     }
   }, [])
 
@@ -183,41 +192,24 @@ const TURNS = [
     ask: 'كم سعر متر الأرض في حطين؟',
     spoken: 'أبشر، متوسط سعر المتر للأراضي السكنية في حي حطين هو ستة آلاف وميتين ريال.',
     hl: 'price',
-    speak: { en: '6,200 → ستة آلاف وميتين', ar: '6,200 ← ستة آلاف وميتين' },
   },
   {
     ask: 'وكم عمولة السعي عند البيع؟',
     spoken: 'عمولة السعي عند البيع اثنين ونص بالمية من قيمة العقار.',
     hl: 'commission',
-    speak: { en: '2.5% → اثنين ونص بالمية', ar: '2.5% ← اثنين ونص بالمية' },
   },
 ]
 
-const STAGES = [
-  { id: 'livekit', icon: 'radio' },
-  { id: 'warmup', icon: 'zap', time: '0.93 s' },
-  { id: 'turn', icon: 'waves', time: '0.40 s' },
-  { id: 'stt', icon: 'type', time: '0.08 s' },
-  { id: 'rag', icon: 'search', time: '0.03 s', tool: true },
-  { id: 'llm', icon: 'cpu', time: '0.44 s' },
-  { id: 'speak', icon: 'hash' },
-  { id: 'tts', icon: 'volume', time: '0.05 s' },
-]
-const PER_TURN = ['turn', 'stt', 'rag', 'llm', 'speak', 'tts']
-
-// GPU memory at idle from the benchmark (MiB of a 24,564 MiB card).
-const GPU = { total: 24564, parts: [['stt', 4806], ['tts', 6160], ['llm', 11078]] }
-
-// Rough scene lengths in seconds, for the chapter progress bars.
-const DURATIONS = [12.5, 9.5, 27]
+// The walkthrough's scenes, in order.
+const SCENES = ['home', 'wizard', 'knowledge', 'call', 'dashboard']
 const NAV_ICONS = ['home', 'bot', 'file', 'volume', 'mic']
 const TOOLS = ['rag', 'end_call']
 
 const STR = {
   en: {
     brand: 'Baleegh',
+    you: 'You',
     nav: ['Home', 'Agents', 'Documents', 'Text to Speech', 'Speech to Text'],
-    chapters: [['Create the agent', 'Three-step wizard'], ['Add knowledge', 'Upload a PDF'], ['Take a call', 'Answers from that PDF']],
     wizTitle: 'Agent setup',
     steps: [
       ['Setup agent', 'Define identity, role and language.'],
@@ -239,7 +231,7 @@ const STR = {
     pages: '4 pages',
     kb: { uploading: 'Uploading…', parsing: 'Parsing…', chunking: 'Chunking…', embedding: 'Embedding…', ready: 'Ready · 6 chunks' },
     kbTiming: 'parsed 4.2 s · embedded 0.8 s',
-    kbNote: 'Indexed through Naseh: dense + BM25 vectors in Qdrant',
+    kbNote: 'Indexed for search through Naseh',
     preview: 'Preview',
     page: 'p. 2',
     empty: 'No documents yet',
@@ -250,34 +242,33 @@ const STR = {
       ['“What is the land price per metre in Hittin?”', '“Sure. Residential land in Hittin averages 6,200 riyals per metre.”'],
       ['“And the sales commission?”', '“The sales commission is 2.5% of the property value.”'],
     ],
+    hero: ['Give your product an ', 'Arabic voice', '.'],
+    lead: 'Baleegh turns text into natural speech and speech back into text — tuned for Arabic first, with English alongside.',
+    toolsHeading: 'Tools',
+    tiles: [
+      ['volume', 'Text to Speech', 'The Najdi Arabic voice behind every agent, with speed control.'],
+      ['mic', 'Speech to Text', 'Upload or record audio and get a timestamped transcript.'],
+      ['bot', 'Agents', 'Voice agents with their own prompt, knowledge base and call settings.'],
+      ['zap', 'API access', 'The same models over REST, so services can call Baleegh directly.'],
+    ],
+    lastCall: 'Last call',
+    stats: [['Duration', '0:26'], ['Turns', '2'], ['Answered from documents', '2 of 2'], ['First audio', '1.00 s']],
+    criteriaTitle: 'Success criteria',
+    criteria: ['Answered from the knowledge base', 'Gave the price in riyals', 'Stayed in Najdi Arabic'],
+    score: (n, of) => `${n} of ${of} passed`,
+    transcriptTitle: 'Transcript',
+    who: { caller: 'Caller', agent: 'Faisal' },
     minimise: 'Minimise',
     agent: 'Faisal',
     voice: 'Fasee7 · Najdi',
     status: { connecting: 'Connecting…', listening: 'Listening', hearing: 'Hearing you', thinking: 'Thinking', speaking: 'Speaking' },
     hint: { connecting: 'Setting up the call', listening: 'Just talk — no button to hold', hearing: '', thinking: '', speaking: 'Say something to interrupt' },
     mute: 'Mute', end: 'End', transcript: 'Transcript',
-    panelTitle: 'This turn',
-    panelSub: 'Median of 40 benchmark turns · RTX 4090',
-    tool: 'tool',
-    stages: {
-      livekit: ['LiveKit room', 'Self-hosted · WebRTC · no cloud'],
-      warmup: ['Warm-up', 'STT, LLM and TTS in parallel'],
-      turn: ['End of turn', 'Silero VAD + turn detector, local ONNX'],
-      stt: ['Speech to text', 'Cohere Transcribe Arabic'],
-      rag: ['rag', 'Document search through Naseh'],
-      llm: ['Language model', 'gemma-4-12b AWQ on vLLM'],
-      speak: ['Speakable text', ''],
-      tts: ['Speech synthesis', 'Fasee7 Najdi on VoxCPM2 · streamed'],
-    },
-    ttfa: 'Time to first audio',
-    before: 'before streaming',
-    gpu: 'One 24 GB GPU',
-    gpuParts: { stt: 'STT', tts: 'TTS', llm: 'LLM' },
   },
   ar: {
     brand: 'بليغ',
+    you: 'أنت',
     nav: ['الرئيسية', 'الوكلاء', 'المستندات', 'تحويل النص إلى كلام', 'تحويل الكلام إلى نص'],
-    chapters: [['إنشاء الوكيل', 'معالج من ثلاث خطوات'], ['إضافة المعرفة', 'رفع ملف PDF'], ['استقبال مكالمة', 'إجابات من ذلك الملف']],
     wizTitle: 'إعداد الوكيل',
     steps: [
       ['إعداد الوكيل', 'حدّد الهوية والدور واللغة.'],
@@ -299,7 +290,7 @@ const STR = {
     pages: '4 صفحات',
     kb: { uploading: 'جارٍ الرفع…', parsing: 'جارٍ التحليل…', chunking: 'جارٍ التقسيم…', embedding: 'جارٍ التضمين…', ready: 'جاهز · 6 مقاطع' },
     kbTiming: 'التحليل 4.2 ث · التضمين 0.8 ث',
-    kbNote: 'الفهرسة عبر ناصح: متجهات Dense + BM25 في Qdrant',
+    kbNote: 'مفهرس للبحث عبر ناصح',
     preview: 'معاينة',
     page: 'ص 2',
     empty: 'لا توجد مستندات بعد',
@@ -307,29 +298,28 @@ const STR = {
     hit: 'أداة rag طابقت هذا المقطع · 0.03 ث',
     ref: 'الإجابة من',
     gloss: null,
+    hero: ['امنح منتجك ', 'صوتاً عربياً', '.'],
+    lead: 'يحوّل بليغ النص إلى كلام طبيعي، والكلام إلى نص — مضبوط للعربية أولاً، ومعها الإنجليزية.',
+    toolsHeading: 'الأدوات',
+    tiles: [
+      ['volume', 'تحويل النص إلى كلام', 'الصوت النجدي الذي يتكلم به كل وكيل، مع التحكم في السرعة.'],
+      ['mic', 'تحويل الكلام إلى نص', 'ارفع تسجيلاً أو سجّل صوتك واحصل على تفريغ نصي بالتوقيتات.'],
+      ['bot', 'الوكلاء', 'وكلاء صوتيون لكل منهم موجّهه وقاعدة معرفته وإعدادات مكالماته.'],
+      ['zap', 'الوصول عبر API', 'النماذج نفسها عبر REST، لتستدعي خدماتُك بليغ مباشرة.'],
+    ],
+    lastCall: 'آخر مكالمة',
+    stats: [['المدة', '0:26'], ['الأدوار', '2'], ['إجابات من المستندات', '2 من 2'], ['أول صوت', '1.00 ث']],
+    criteriaTitle: 'معايير النجاح',
+    criteria: ['أجاب من قاعدة المعرفة', 'ذكر السعر بالريال', 'التزم باللهجة النجدية'],
+    score: (n, of) => `تحقق ${n} من ${of}`,
+    transcriptTitle: 'التفريغ',
+    who: { caller: 'المتصل', agent: 'فيصل' },
     minimise: 'تصغير',
     agent: 'فيصل',
     voice: 'فصيح · نجدي',
     status: { connecting: 'جارٍ الاتصال…', listening: 'يستمع', hearing: 'يسمعك', thinking: 'يفكّر', speaking: 'يتحدث' },
     hint: { connecting: 'جارٍ تجهيز المكالمة', listening: 'تحدّث فحسب — لا زر تضغطه', hearing: '', thinking: '', speaking: 'قل شيئاً لمقاطعته' },
     mute: 'كتم', end: 'إنهاء', transcript: 'التفريغ',
-    panelTitle: 'هذا الدور',
-    panelSub: 'الوسيط لـ 40 دورًا في الاختبار · RTX 4090',
-    tool: 'أداة',
-    stages: {
-      livekit: ['غرفة LiveKit', 'ذاتية الاستضافة · WebRTC · دون سحابة'],
-      warmup: ['التسخين', 'STT والـ LLM والـ TTS معًا'],
-      turn: ['نهاية الدور', 'Silero VAD + turn detector محليًا (ONNX)'],
-      stt: ['تحويل الكلام لنص', 'Cohere Transcribe Arabic'],
-      rag: ['rag', 'بحث المستندات عبر ناصح'],
-      llm: ['النموذج اللغوي', 'gemma-4-12b AWQ على vLLM'],
-      speak: ['نص قابل للنطق', ''],
-      tts: ['تركيب الصوت', 'فصيح النجدي على VoxCPM2 · متدفّق'],
-    },
-    ttfa: 'زمن أول صوت',
-    before: 'قبل البث المتدفّق',
-    gpu: 'معالج GPU واحد 24 GB',
-    gpuParts: { stt: 'STT', tts: 'TTS', llm: 'LLM' },
   },
 }
 
@@ -337,124 +327,147 @@ const EMPTY = {
   // wizard
   step: 0, focus: null, name: '', role: '', language: false, voice: false, model: false, tools: [],
   press: null, creating: false, created: false,
+  // after-call dashboard
+  passed: 0,
+  // pointer
+  cur: null, click: 0,
   // knowledge base
   drop: false, file: null,
   // call
-  state: 'connecting', caption: '', who: null, turn: 0, done: [], active: null, first: false, hl: null,
+  state: 'connecting', caption: '', who: null, turn: 0, hl: null,
 }
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
+
+// Its own component, so the ticking clock re-renders only itself.
+function CallTimer({ paused }) {
+  const [elapsed, setElapsed] = useState(0)
+  useEffect(() => {
+    if (paused) return undefined
+    const id = setInterval(() => setElapsed((e) => e + 1), 1000)
+    return () => clearInterval(id)
+  }, [paused])
+  return fmt(elapsed)
+}
 
 export default function BaleeghFlow() {
   const { lang } = useLang()
   const S = STR[lang] || STR.en
   const ref = useRef(null)
-  const { playing, scene, run, go } = usePlayer(ref, 3)
+  const { started, paused, scene, run, go, start } = usePlayer(ref, SCENES.length)
   const [sc, setSc] = useState(EMPTY)
-  const [elapsed, setElapsed] = useState(0)
-
   useEffect(() => {
-    if (!playing || scene !== 2) return undefined
-    const started = Date.now()
-    setElapsed(0)
-    const id = setInterval(() => setElapsed((Date.now() - started) / 1000), 500)
-    return () => clearInterval(id)
-  }, [playing, scene, run])
-
-  useEffect(() => {
-    if (!playing) return undefined
-    let alive = true
-    let timer
-    const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms) })
-    const s = { ...EMPTY, tools: [], done: [] }
-    const commit = () => alive && setSc({ ...s, tools: [...s.tools], done: [...s.done] })
-    const set = async (patch, ms = 0) => { Object.assign(s, patch); commit(); if (ms) await wait(ms) }
-    const type = async (key, text, ms) => {
-      for (let i = 1; i <= text.length && alive; i++) { s[key] = text.slice(0, i); commit(); await wait(ms) }
-    }
-    const runStage = async (id, ms) => { await set({ active: id }, ms); s.done.push(id); await set({ active: null }) }
-    const say = async (text, who) => {
-      const words = text.split(' ')
-      s.who = who
-      for (let i = 1; i <= words.length && alive; i++) { s.caption = words.slice(0, i).join(' '); commit(); await wait(310) }
-    }
-
-    const wizard = async () => {
-      await set({}, 600)
-      await set({ focus: 'name' }, 200)
-      await type('name', S.v.name, 80)
-      await set({ focus: 'role' }, 250)
-      await type('role', S.v.role, 30)
-      await set({ focus: 'language' }, 300)
-      await set({ language: true }, 600)
-      await set({ focus: null, press: 'next' }, 350)
-      await set({ press: null, step: 1 }, 600)
-      await set({ focus: 'voice', voice: true }, 750)
-      await set({ focus: 'model', model: true }, 750)
-      await set({ focus: 'tools', tools: ['rag'] }, 450)
-      await set({ tools: ['rag', 'end_call'] }, 650)
-      await set({ focus: null, press: 'next' }, 350)
-      await set({ press: null, step: 2 }, 1700)
-      await set({ press: 'create' }, 300)
-      await set({ press: null, creating: true }, 900)
-      await set({ creating: false, created: true }, 1900)
-    }
-
-    const knowledge = async () => {
-      await set({}, 700)
-      await set({ drop: true }, 900)
-      await set({ drop: false, file: 'uploading' }, 700)
-      await set({ file: 'parsing' }, 1800)
-      await set({ file: 'chunking' }, 1000)
-      await set({ file: 'embedding' }, 900)
-      await set({ file: 'ready' }, 2800)
-    }
-
-    const call = async () => {
-      await runStage('livekit', 700)
-      await runStage('warmup', 900)
-      await set({ state: 'listening' }, 1000)
-      for (let t = 0; t < TURNS.length && alive; t++) {
-        const turn = TURNS[t]
-        await set({ turn: t, state: 'hearing', hl: null, first: t > 0 && s.first }, 250)
-        s.done = s.done.filter((id) => !PER_TURN.includes(id))
-        await say(turn.ask, 'caller')
-        await wait(500)
-        await set({ state: 'thinking' })
-        await runStage('turn', 700)
-        await runStage('stt', 450)
-        await set({ hl: turn.hl })
-        await runStage('rag', 450)
-        await runStage('llm', 900)
-        await runStage('speak', 450)
-        await runStage('tts', 450)
-        await set({ first: true, state: 'speaking', caption: '' })
-        await say(turn.spoken, 'agent')
-        await wait(t === TURNS.length - 1 ? 2600 : 2000)
-        await set({ state: 'listening', caption: '', who: null }, 1000)
+    if (!started) return undefined
+    return start(async ({ wait, live }) => {
+      const s = { ...EMPTY, tools: [] }
+      const commit = () => live() && setSc({ ...s, tools: [...s.tools] })
+      const set = async (patch, ms = 0) => { Object.assign(s, patch); commit(); if (ms) await wait(ms) }
+      const type = async (key, text, ms) => {
+        for (let i = 1; i <= text.length && live(); i++) { s[key] = text.slice(0, i); commit(); await wait(ms) }
       }
-    }
+      const say = async (text, who) => {
+        const words = text.split(' ')
+        s.who = who
+        for (let i = 1; i <= words.length && live(); i++) { s.caption = words.slice(0, i).join(' '); commit(); await wait(310) }
+      }
 
-    ;[wizard, knowledge, call][scene]().then(() => alive && go(scene + 1))
-    return () => { alive = false; clearTimeout(timer) }
-  }, [playing, scene, run, S, go])
+      const point = (cur) => set({ cur }, 620)
+      const click = (patch) => set({ ...patch, click: s.click + 1 }, 380)
+
+      const home = async () => {
+        await set({}, 2600)
+        await point('nav-agents')
+        await click({})
+      }
+      const wizard = async () => {
+        await set({}, 500)
+        await point('name')
+        await set({ focus: 'name' }, 150)
+        await type('name', S.v.name, 80)
+        await point('role')
+        await set({ focus: 'role' }, 150)
+        await type('role', S.v.role, 30)
+        await point('language')
+        await click({ focus: 'language', language: true })
+        await point('btn')
+        await click({ focus: null, press: 'next' })
+        await set({ press: null, step: 1 }, 500)
+        await point('voice')
+        await click({ focus: 'voice', voice: true })
+        await point('model')
+        await click({ focus: 'model', model: true })
+        await point('tools')
+        await click({ focus: 'tools', tools: ['rag'] })
+        await set({ tools: ['rag', 'end_call'] }, 500)
+        await point('btn')
+        await click({ focus: null, press: 'next' })
+        await set({ press: null, step: 2 }, 1500)
+        await point('btn')
+        await click({ press: 'create' })
+        await set({ press: null, creating: true }, 900)
+        await set({ creating: false, created: true, cur: null }, 1900)
+      }
+
+      const knowledge = async () => {
+        await set({}, 500)
+        await set({ cur: 'drop', drop: true }, 1100)
+        await click({ drop: false, file: 'uploading' })
+        await set({ cur: null }, 400)
+        await set({ file: 'parsing' }, 1800)
+        await set({ file: 'chunking' }, 1000)
+        await set({ file: 'embedding' }, 900)
+        await set({ file: 'ready' }, 2800)
+      }
+
+      const call = async () => {
+        await set({}, 1600)
+        await set({ state: 'listening' }, 1000)
+        for (let t = 0; t < TURNS.length && live(); t++) {
+          const turn = TURNS[t]
+          await set({ turn: t, state: 'hearing', hl: null }, 250)
+          await say(turn.ask, 'caller')
+          await wait(500)
+          await set({ state: 'thinking' })
+          // End of turn and transcription, then the document search lights its match.
+          await wait(1150)
+          await set({ hl: turn.hl }, 1800)
+          await set({ state: 'speaking', caption: '' })
+          await say(turn.spoken, 'agent')
+          await wait(t === TURNS.length - 1 ? 2600 : 2000)
+          await set({ state: 'listening', caption: '', who: null }, 1000)
+        }
+        await point('end')
+        await click({})
+      }
+      // The call is scored against the agent's success criteria, one by one.
+      const dashboard = async () => {
+        await set({}, 1500)
+        for (let n = 1; n <= S.criteria.length && live(); n++) await set({ passed: n }, 550)
+        await set({}, 4200)
+      }
+
+      await { home, wizard, knowledge, call, dashboard }[SCENES[scene]]()
+    }, () => go(scene + 1))
+  }, [started, scene, run, S, go, start])
 
   const initial = lang === 'ar' ? 'ف' : 'F'
   const caret = <i className="bl-caret" />
   const check = <span className="bl-ok"><Icon name="check" size={13} /></span>
   const field = (id, label, children) => (
-    <div className={`bl-field${sc.focus === id ? ' is-focus' : ''}`}>
+    <div className={`bl-field${sc.focus === id ? ' is-focus' : ''}`} data-cur={id}>
       <span className="bl-label">{label}</span>
       {children}
     </div>
   )
+
+  const view = SCENES[scene]
 
   const sidebar = (
     <aside className="bl-side">
       <span className="bl-wordmark">{S.brand}</span>
       <ul>
         {S.nav.map((item, i) => (
-          <li key={i} className={i === 1 ? 'is-active' : undefined}>
+          <li key={i} className={i === (view === 'home' ? 0 : 1) ? 'is-active' : undefined} data-cur={i === 1 ? 'nav-agents' : undefined}>
             <Icon name={NAV_ICONS[i]} size={15} />
             <span>{item}</span>
           </li>
@@ -463,134 +476,156 @@ export default function BaleeghFlow() {
     </aside>
   )
 
-  const wizardScene = (
-    <div className="bl-app">
-      {sidebar}
-      <div className="bl-main">
-        <h4 className="bl-h">{S.wizTitle}</h4>
-        <ol className="bl-stepper">
-          {S.steps.map(([title, desc], i) => (
-            <li key={i} className={`${i === sc.step ? 'is-active' : ''}${i < sc.step || sc.created ? ' is-done' : ''}`}>
-              <span className="bl-step-n">{i < sc.step || sc.created ? <Icon name="check" size={12} /> : i + 1}</span>
-              <span className="bl-step-txt">
-                <strong>{title}</strong>
-                <small>{desc}</small>
-              </span>
-            </li>
-          ))}
-        </ol>
+  // The hero line appears a word at a time.
+  const words = (text, from) => text.split(/(\s+)/).map((word, i) => (
+    word.trim() ? <span key={i} className="dm-word" style={{ '--w': from + i / 2 }}>{word}</span> : word
+  ))
 
-        <div className="bl-form" key={sc.step}>
-          {sc.step === 0 && (
-            <>
-              {field('name', S.f.name, <span className="bl-input">{sc.name}{sc.focus === 'name' && caret}</span>)}
-              {field('role', S.f.role, <span className="bl-input">{sc.role}{sc.focus === 'role' && caret}</span>)}
-              {field('language', S.f.language, (
-                <span className="bl-input bl-select">
-                  {sc.language ? S.v.language : <em>—</em>}
-                  <Icon name="chevronDown" size={14} />
-                </span>
-              ))}
-            </>
-          )}
-          {sc.step === 1 && (
-            <>
-              {field('voice', S.f.voice, (
-                <span className={`bl-option${sc.voice ? ' is-on' : ''}`}>
-                  <span className="bl-face bl-face-sm">{initial}</span>
-                  <span className="bl-option-txt"><strong>{S.v.voice}</strong><small>{S.v.voiceSub}</small></span>
-                  <span className="bl-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>
-                  {sc.voice && check}
-                </span>
-              ))}
-              {field('model', S.f.model, (
-                <span className={`bl-option${sc.model ? ' is-on' : ''}`}>
-                  <span className="bl-tile-ic"><Icon name="cpu" /></span>
-                  <span className="bl-option-txt"><strong>{S.v.model}</strong><small>{S.v.modelSub}</small></span>
-                  {sc.model && check}
-                </span>
-              ))}
-              {field('tools', S.f.tools, (
-                <span className="bl-toolrows">
-                  {TOOLS.map((tool) => (
-                    <span key={tool} className={`bl-toolrow${sc.tools.includes(tool) ? ' is-on' : ''}`}>
-                      <span className="bl-switch" />
-                      <code>{tool}</code>
-                      <small>{S.tools[tool]}</small>
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </>
-          )}
-          {sc.step === 2 && (
-            <dl className="bl-review">
-              <div><dt>{S.f.name}</dt><dd>{S.v.name}</dd></div>
-              <div><dt>{S.f.role}</dt><dd>{S.v.role}</dd></div>
-              <div><dt>{S.f.language}</dt><dd>{S.v.language}</dd></div>
-              <div><dt>{S.f.voice}</dt><dd>{S.v.voice} · {S.v.voiceSub}</dd></div>
-              <div><dt>{S.f.model}</dt><dd>{S.v.model} · {S.v.modelSub}</dd></div>
-              <div><dt>{S.f.tools}</dt><dd>{TOOLS.map((tool) => <code key={tool}>{tool}</code>)}</dd></div>
-            </dl>
-          )}
-        </div>
-
-        <footer className="bl-foot">
-          {sc.created ? (
-            <span className="bl-toast">{check}{S.created}</span>
-          ) : sc.step < 2 ? (
-            <span className={`bl-btn${sc.press === 'next' ? ' is-press' : ''}`}>{S.next}</span>
-          ) : (
-            <span className={`bl-btn${sc.press === 'create' ? ' is-press' : ''}`}>
-              {sc.creating && <span className="bl-spin" />}
-              {sc.creating ? S.creating : S.create}
-            </span>
-          )}
-        </footer>
+  const homeScene = (
+    <>
+      <div className="dm-hero">
+        <h4>
+          {words(S.hero[0], 0)}
+          <span className="dm-accent">{words(S.hero[1], 4)}</span>
+          {S.hero[2]}
+        </h4>
+        <p>{S.lead}</p>
       </div>
-    </div>
+      <p className="bl-eyebrow">{S.toolsHeading}</p>
+      <div className="dm-tiles">
+        {S.tiles.map(([icon, title, text], i) => (
+          <div key={i} className="dm-tile" style={{ '--i': i }}>
+            <div className="dm-tile-head">
+              <span className="bl-tile-ic"><Icon name={icon} /></span>
+              <strong>{title}</strong>
+            </div>
+            <p>{text}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+
+  const wizardScene = (
+    <>
+      <h4 className="bl-h">{S.wizTitle}</h4>
+      <ol className="bl-stepper">
+        {S.steps.map(([title, desc], i) => (
+          <li key={i} className={`${i === sc.step ? 'is-active' : ''}${i < sc.step || sc.created ? ' is-done' : ''}`}>
+            <span className="bl-step-n">{i < sc.step || sc.created ? <Icon name="check" size={12} /> : i + 1}</span>
+            <span className="bl-step-txt">
+              <strong>{title}</strong>
+              <small>{desc}</small>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <div className="bl-form" key={sc.step}>
+        {sc.step === 0 && (
+          <>
+            {field('name', S.f.name, <span className="bl-input">{sc.name}{sc.focus === 'name' && caret}</span>)}
+            {field('role', S.f.role, <span className="bl-input">{sc.role}{sc.focus === 'role' && caret}</span>)}
+            {field('language', S.f.language, (
+              <span className="bl-input bl-select">
+                {sc.language ? S.v.language : <em>—</em>}
+                <Icon name="chevronDown" size={14} />
+              </span>
+            ))}
+          </>
+        )}
+        {sc.step === 1 && (
+          <>
+            {field('voice', S.f.voice, (
+              <span className={`bl-option${sc.voice ? ' is-on' : ''}`}>
+                <span className="bl-face bl-face-sm">{initial}</span>
+                <span className="bl-option-txt"><strong>{S.v.voice}</strong><small>{S.v.voiceSub}</small></span>
+                <span className="bl-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>
+                {sc.voice && check}
+              </span>
+            ))}
+            {field('model', S.f.model, (
+              <span className={`bl-option${sc.model ? ' is-on' : ''}`}>
+                <span className="bl-tile-ic"><Icon name="cpu" /></span>
+                <span className="bl-option-txt"><strong>{S.v.model}</strong><small>{S.v.modelSub}</small></span>
+                {sc.model && check}
+              </span>
+            ))}
+            {field('tools', S.f.tools, (
+              <span className="bl-toolrows">
+                {TOOLS.map((tool) => (
+                  <span key={tool} className={`bl-toolrow${sc.tools.includes(tool) ? ' is-on' : ''}`}>
+                    <span className="bl-switch" />
+                    <code>{tool}</code>
+                    <small>{S.tools[tool]}</small>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </>
+        )}
+        {sc.step === 2 && (
+          <dl className="bl-review">
+            <div><dt>{S.f.name}</dt><dd>{S.v.name}</dd></div>
+            <div><dt>{S.f.role}</dt><dd>{S.v.role}</dd></div>
+            <div><dt>{S.f.language}</dt><dd>{S.v.language}</dd></div>
+            <div><dt>{S.f.voice}</dt><dd>{S.v.voice} · {S.v.voiceSub}</dd></div>
+            <div><dt>{S.f.model}</dt><dd>{S.v.model} · {S.v.modelSub}</dd></div>
+            <div><dt>{S.f.tools}</dt><dd>{TOOLS.map((tool) => <code key={tool}>{tool}</code>)}</dd></div>
+          </dl>
+        )}
+      </div>
+
+      <footer className="bl-foot">
+        {sc.created ? (
+          <span className="bl-toast">{check}{S.created}</span>
+        ) : sc.step < 2 ? (
+          <span className={`bl-btn${sc.press === 'next' ? ' is-press' : ''}`} data-cur="btn">{S.next}</span>
+        ) : (
+          <span className={`bl-btn${sc.press === 'create' ? ' is-press' : ''}`} data-cur="btn">
+            {sc.creating && <span className="bl-spin" />}
+            {sc.creating ? S.creating : S.create}
+          </span>
+        )}
+      </footer>
+    </>
   )
 
   const knowledgeScene = (
-    <div className="bl-app">
-      {sidebar}
-      <div className="bl-main">
-        <div className="bl-agent-head">
-          <span className="bl-face bl-face-sm">{initial}</span>
-          <h4 className="bl-h">{S.agent}</h4>
+    <>
+      <div className="bl-agent-head">
+        <span className="bl-face bl-face-sm">{initial}</span>
+        <h4 className="bl-h">{S.agent}</h4>
+      </div>
+      <ul className="bl-tabs">
+        {S.tabs.map((tab, i) => <li key={i} className={i === 2 ? 'is-active' : undefined}>{tab}</li>)}
+      </ul>
+      <div className="bl-kb">
+        <div className="bl-kb-left">
+          <p className="bl-hint">{S.kbHint}</p>
+          <DropZone title={S.upload} formats={S.formats} over={sc.drop} dragName={S.file} />
+          {sc.file && (
+            <DocRow name={S.file} meta={S.pages} status={sc.file} label={S.kb[sc.file]} timing={S.kbTiming} />
+          )}
+          {sc.file === 'ready' && <p className="dm-note"><Icon name="search" size={12} />{S.kbNote}</p>}
         </div>
-        <ul className="bl-tabs">
-          {S.tabs.map((tab, i) => <li key={i} className={i === 2 ? 'is-active' : undefined}>{tab}</li>)}
-        </ul>
-        <div className="bl-kb">
-          <div className="bl-kb-left">
-            <p className="bl-hint">{S.kbHint}</p>
-            <DropZone title={S.upload} formats={S.formats} over={sc.drop} dragName={S.file} />
-            {sc.file && (
-              <DocRow name={S.file} meta={S.pages} status={sc.file} label={S.kb[sc.file]} timing={S.kbTiming} />
-            )}
-            {sc.file === 'ready' && <p className="dm-note"><Icon name="search" size={12} />{S.kbNote}</p>}
+        <div className="dm-viewer">
+          <div className="dm-viewer-head">
+            <span>{S.preview}</span>
+            {sc.file && <small>{S.file} · {S.page}</small>}
           </div>
-          <div className="dm-viewer">
-            <div className="dm-viewer-head">
-              <span>{S.preview}</span>
-              {sc.file && <small>{S.file} · {S.page}</small>}
-            </div>
-            {sc.file ? (
-              <SamplePdf lang="ar" mode={sc.file === 'parsing' ? 'scan' : sc.file === 'chunking' || sc.file === 'embedding' ? 'chunks' : null} />
-            ) : (
-              <p className="dm-viewer-empty">{S.empty}</p>
-            )}
-          </div>
+          {sc.file ? (
+            <SamplePdf lang="ar" mode={sc.file === 'parsing' ? 'scan' : sc.file === 'chunking' || sc.file === 'embedding' ? 'chunks' : null} />
+          ) : (
+            <p className="dm-viewer-empty">{S.empty}</p>
+          )}
         </div>
       </div>
-    </div>
+    </>
   )
 
   const { state } = sc
-  const turn = TURNS[sc.turn]
   const gloss = S.gloss && sc.who && S.gloss[sc.turn][sc.who === 'caller' ? 0 : 1]
-  const gpuUsed = GPU.parts.reduce((a, [, v]) => a + v, 0)
 
   const callScene = (
     <div className="bl-call">
@@ -598,7 +633,7 @@ export default function BaleeghFlow() {
       <div className={`bl-vm bl-vm-${state}`}>
         <header className="bl-vm-head">
           <span className="bl-chip"><Icon name="chevronDown" size={15} />{S.minimise}</span>
-          <span className="bl-chip bl-timer"><span className="bl-live-dot" />{fmt(elapsed)}</span>
+          <span className="bl-chip bl-timer"><span className="bl-live-dot" /><CallTimer key={run} paused={paused} /></span>
         </header>
 
         <div className="bl-stage">
@@ -620,7 +655,7 @@ export default function BaleeghFlow() {
 
         <footer className="bl-dock">
           <span className="bl-key"><Icon name="mic" size={20} /><small>{S.mute}</small></span>
-          <span className="bl-key bl-key-end"><Icon name="phoneOff" size={22} /><small>{S.end}</small></span>
+          <span className="bl-key bl-key-end" data-cur="end"><Icon name="phoneOff" size={22} /><small>{S.end}</small></span>
           <span className="bl-key"><Icon name="chat" size={20} /><small>{S.transcript}</small></span>
         </footer>
       </div>
@@ -638,80 +673,79 @@ export default function BaleeghFlow() {
         </p>
       </div>
 
-      {/* The pipeline, as an app panel */}
-      <div className="bl-panel">
-        <div className="bl-panel-head">
-          <span className="bl-tile-ic"><Icon name="activity" /></span>
-          <div>
-            <strong>{S.panelTitle}</strong>
-            <small>{S.panelSub}</small>
-          </div>
-        </div>
-
-        <ul className="bl-rows">
-          {STAGES.map((st) => {
-            const [name, desc] = S.stages[st.id]
-            const done = sc.done.includes(st.id)
-            const active = sc.active === st.id
-            return (
-              <li key={st.id} className={`bl-row${done ? ' is-done' : ''}${active ? ' is-active' : ''}`}>
-                <span className="bl-tile-ic"><Icon name={st.icon} /></span>
-                <span className="bl-row-txt">
-                  <span className="bl-row-name">
-                    {name}
-                    {st.tool && <span className="bl-tool">{S.tool}</span>}
-                  </span>
-                  <small>{st.id === 'speak' ? turn.speak[lang] || turn.speak.en : desc}</small>
-                </span>
-                <span className="bl-row-end">
-                  {active && <span className="bl-spin" />}
-                  {done && st.time && <span className="bl-time">{st.time}</span>}
-                  {done && check}
-                </span>
-              </li>
-            )
-          })}
-        </ul>
-
-        <div className="bl-ttfa">
-          <div className="bl-ttfa-top">
-            <span className="bl-eyebrow">{S.ttfa}</span>
-            <span className={`bl-badge-live${sc.first ? ' show' : ''}`}>−56%</span>
-          </div>
-          <div className="bl-meter">
-            <span className="bl-meter-label">1.00 s</span>
-            <span className="bl-meter-track"><i className={sc.first ? 'show' : ''} style={{ width: '44%' }} /></span>
-          </div>
-          <div className="bl-meter bl-meter-before">
-            <span className="bl-meter-label">2.27 s</span>
-            <span className="bl-meter-track"><i className="show" style={{ width: '100%' }} /></span>
-            <small>{S.before}</small>
-          </div>
-        </div>
-
-        <div className="bl-gpu">
-          <div className="bl-ttfa-top">
-            <span className="bl-eyebrow">{S.gpu}</span>
-            <span className="bl-time">{(gpuUsed / 1024).toFixed(1)} / {(GPU.total / 1024).toFixed(1)} GiB</span>
-          </div>
-          <div className="bl-gpu-bar">
-            {GPU.parts.map(([k, v]) => (
-              <span key={k} className={`bl-gpu-${k}`} style={{ width: `${(v / GPU.total) * 100}%` }}>
-                {S.gpuParts[k]} {(v / 1024).toFixed(1)}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   )
 
-  return (
-    <div className="bl" ref={ref}>
-      <Chapters items={S.chapters} scene={scene} run={run} durations={DURATIONS} onPick={go} />
-      <div className="bl-screen" key={scene}>
-        {[wizardScene, knowledgeScene, callScene][scene]}
+  // Not a screen of the real app yet: how a finished call would be scored
+  // against the agent's success criteria.
+  const dashboardScene = (
+    <>
+      <div className="bl-agent-head">
+        <span className="bl-face bl-face-sm">{initial}</span>
+        <h4 className="bl-h">{S.agent}</h4>
+        <span className="bl-badge-live show">{S.lastCall}</span>
       </div>
+      <ul className="bl-tabs">
+        {S.tabs.map((tab, i) => <li key={i} className={i === 3 ? 'is-active' : undefined}>{tab}</li>)}
+      </ul>
+      <div className="bl-stats">
+        {S.stats.map(([label, value], i) => (
+          <div key={i} style={{ '--i': i }}>
+            <small>{label}</small>
+            <strong>{value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className="bl-dash">
+        <section className="bl-card">
+          <header>
+            <strong>{S.criteriaTitle}</strong>
+            <span className={`bl-badge-live${sc.passed === S.criteria.length ? ' show' : ''}`}>
+              {S.score(sc.passed, S.criteria.length)}
+            </span>
+          </header>
+          <ul className="bl-criteria">
+            {S.criteria.map((item, i) => (
+              <li key={i} className={i < sc.passed ? 'is-passed' : undefined}>
+                <span className="bl-ok"><Icon name="check" size={13} /></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="bl-card">
+          <header><strong>{S.transcriptTitle}</strong></header>
+          <ol className="bl-transcript">
+            {TURNS.flatMap((turn, t) => [
+              <li key={`${t}a`} style={{ '--i': t * 2 }}>
+                <small>{S.who.caller}</small>
+                <p dir="rtl">{turn.ask}</p>
+              </li>,
+              <li key={`${t}b`} className="is-agent" style={{ '--i': t * 2 + 1 }}>
+                <small>{S.who.agent}</small>
+                <p dir="rtl">{turn.spoken}</p>
+                <span className="bl-source"><Icon name="file" size={11} />{S.file} · {S.page}</span>
+              </li>,
+            ])}
+          </ol>
+        </section>
+      </div>
+    </>
+  )
+
+  const mains = { home: homeScene, wizard: wizardScene, knowledge: knowledgeScene, dashboard: dashboardScene }
+
+  return (
+    <div className={`bl${paused ? ' is-paused' : ''}`} ref={ref}>
+      <div className="dm-frame">
+        {view === 'call' ? callScene : (
+          <div className="bl-app">
+            {sidebar}
+            <div className="bl-main" key={view}>{mains[view]}</div>
+          </div>
+        )}
+      </div>
+      <Cursor rootRef={ref} target={sc.cur} click={sc.click} label={S.you} />
     </div>
   )
 }
