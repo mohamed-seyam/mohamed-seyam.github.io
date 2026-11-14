@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Section from './components/Section'
@@ -19,6 +19,17 @@ export default function ProjectsPage() {
     })
     return Array.from(seen, ([key, label]) => ({ key, label }))
   }, [t])
+
+  // Deep links (projects.html#baleegh): the rows render after load, so the
+  // browser's own hash jump misses them.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (!id) return
+    const raf = requestAnimationFrame(() =>
+      document.getElementById(id)?.scrollIntoView({ block: 'start' })
+    )
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   const shown =
     active === ALL ? t.projects : t.projects.filter((p) => p.categoryKey === active)

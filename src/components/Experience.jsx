@@ -12,6 +12,45 @@ function initials(name) {
     .toUpperCase()
 }
 
+// An item is either a plain string or a project: { title, subtitle, demo, points }.
+// demo links to that project's visualization on the projects page.
+function BulletList({ items }) {
+  const { t } = useLang()
+
+  return (
+    <ul className="bullet-list">
+      {items.map((item, i) =>
+        typeof item === 'string' ? (
+          <li key={i}>{item}</li>
+        ) : (
+          <li className="exp-project" key={i}>
+            <div className="exp-project-head">
+              <p>
+                <strong>{item.title}</strong>
+                {item.subtitle && <span> — {item.subtitle}</span>}
+              </p>
+              {item.demo && (
+                <a className="exp-demo-link" href={`/projects.html#${item.demo}`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  {t.ui.viewDemo}
+                </a>
+              )}
+            </div>
+            <ul className="bullet-list bullet-list--sub">
+              {item.points.map((point, j) => (
+                <li key={j}>{point}</li>
+              ))}
+            </ul>
+          </li>
+        )
+      )}
+    </ul>
+  )
+}
+
 export default function Experience() {
   const { t } = useLang()
 
@@ -46,11 +85,17 @@ export default function Experience() {
               </span>
             </header>
 
-            <ul className="bullet-list">
-              {job.points.map((point, i) => (
-                <li key={i}>{point}</li>
-              ))}
-            </ul>
+            {job.groups ? (
+              job.groups.map((group, i) => (
+                <div className="exp-group" key={i}>
+                  <h4 className="exp-group-title">{group.title}</h4>
+                  {group.intro && <p className="exp-group-intro">{group.intro}</p>}
+                  <BulletList items={group.items} />
+                </div>
+              ))
+            ) : (
+              <BulletList items={job.points} />
+            )}
             <Tags items={job.keywords} />
           </article>
         ))}
